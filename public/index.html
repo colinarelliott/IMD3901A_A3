@@ -9,7 +9,21 @@
         <a-scene>
             <a-assets>
                 <!--Assets-->
+                <!--This work is based on "Progetto 1" (https://sketchfab.com/3d-models/progetto-1-3b571cedfed544c8afa8d5a6a258cd69) by c.capuano2020d (https://sketchfab.com/c.capuano2020d) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)-->
+                <a-asset id="scene-geometry-model" src="assets/models/scene.gltf"></a-asset>
             </a-assets>
+
+            <!--DEV CAMERA-->
+            <a-entity camera look-controls wasd-controls position="0 1.6 0"></a-entity>
+
+            <!--geometry-->
+            <a-entity 
+                id="scene-geometry"
+                gltf-model="#scene-geometry-model"
+                position="0 0 0"
+                scale="0.04 0.04 0.04"
+            ></a-entity>
+
             <!--Environment-->
             <a-entity 
                 id="env" 
@@ -22,6 +36,7 @@
                      groundColor: #00AA00;
                      groundColor2: #009900;"
             ></a-entity>
+
         </a-scene>
     </body>
 </html>
