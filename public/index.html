@@ -13,6 +13,7 @@
                 <!--Assets-->
                 <!--This work is based on "Progetto 1" (https://sketchfab.com/3d-models/progetto-1-3b571cedfed544c8afa8d5a6a258cd69) by c.capuano2020d (https://sketchfab.com/c.capuano2020d) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)-->
                 <a-asset id="scene-geometry-model" src="assets/models/scene.gltf"></a-asset>
+                <a-asset id="crane-model" src="assets/models/crane.gltf"></a-asset>
             </a-assets>
 
             <!--Physics ground plane-->
@@ -41,11 +42,19 @@
                 dynamic-body="shape: box;"
             ></a-entity>
 
+            <a-entity 
+                id="crane1"
+                gltf-model="#crane-model"
+                position="-1 0.6 0"
+                scale="0.005 0.005 0.005"
+                shadow
+                crane-controller
+            ></a-entity>
+
             <!--DEV CAMERA-->
             <a-entity 
                 camera 
                 look-controls 
-                wasd-controls 
                 position="-0.3 1.2 0.05"
             ></a-entity>
 
