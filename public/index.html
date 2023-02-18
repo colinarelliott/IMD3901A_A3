@@ -47,28 +47,6 @@
                 dynamic-body="shape: box;"
             ></a-entity>
 
-            <a-entity 
-                id="crane1"
-                gltf-model="#crane-model"
-                position="-1 0.6 0"
-                scale="0.005 0.005 0.005"
-                shadow>
-                <a-entity
-                    id="crane-magnet1"
-                    geometry="primitive: cylinder; height: 2; radius: 2.5;"
-                    position="67 82 0"
-                    rotation="0 0 0"
-                    material="color: #000000;"
-                ></a-entity>
-                <a-entity
-                    id="magnet-cable1"
-                    geometry="primitive: cylinder; height: 5; radius: 0.1;"
-                    position="67 85 0"
-                    rotation="0 0 0"
-                    material="color: #000000;"
-                ></a-entity>
-            </a-entity>
-
             <!--DEV CAMERA-->
             <a-entity 
                 camera 
@@ -108,6 +86,52 @@
                 material="color: #b8bc3c;"
                 shadow="cast: false;"
             ></a-entity>
+
+            <!--Cranes-->
+            <a-entity 
+                id="crane1"
+                gltf-model="#crane-model"
+                position="-0.5 0.71 0"
+                rotation="0 90 0"
+                scale="0.005 0.005 0.005"
+                shadow>
+                <a-entity
+                    id="crane-magnet1"
+                    geometry="primitive: cylinder; height: 2; radius: 2.5;"
+                    position="67 82 0"
+                    rotation="0 0 0"
+                    material="color: #000000;"
+                ><a-entity
+                        id="magnet-cable1"
+                        geometry="primitive: cylinder; height: 5; radius: 0.1;"
+                        position="0 0 0"
+                        rotation="0 0 0"
+                        material="color: #000000;"
+                    ></a-entity>
+                </a-entity> 
+            </a-entity>
+
+            <a-entity 
+                id="crane2"
+                gltf-model="#crane-model"
+                position="-1 0.71 0.9"
+                scale="0.005 0.005 0.005"
+                shadow>
+                <a-entity
+                    id="crane-magnet2"
+                    geometry="primitive: cylinder; height: 2; radius: 2.5;"
+                    position="67 82 0"
+                    rotation="0 0 0"
+                    material="color: #000000;"
+                    ><a-entity
+                        id="magnet-cable2"
+                        geometry="primitive: cylinder; height: 5; radius: 0.1;"
+                        position="67 85 0"
+                        rotation="0 0 0"
+                        material="color: #000000;"
+                    ></a-entity>
+                </a-entity>
+            </a-entity>
 
 
             <!--Environment-->
