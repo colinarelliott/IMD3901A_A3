@@ -10,10 +10,10 @@
         <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-physics-system@v4.2.2/dist/aframe-physics-system.min.js"></script> 
 
         <!--Custom Components-->
-        <script src="assets/js/crane-controller.js"></script>
+        <script src="components/crane-controller.js"></script>
     </head>
     <body>
-        <a-scene physics="debug: true;">
+        <a-scene physics="debug: true;" crane-controller>
             <a-assets>
                 <!--Assets-->
                 <!--This work is based on "Progetto 1" (https://sketchfab.com/3d-models/progetto-1-3b571cedfed544c8afa8d5a6a258cd69) by c.capuano2020d (https://sketchfab.com/c.capuano2020d) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)-->
@@ -53,7 +53,6 @@
                 position="-1 0.6 0"
                 scale="0.005 0.005 0.005"
                 shadow
-                crane-controller
             ></a-entity>
 
             <!--DEV CAMERA-->
