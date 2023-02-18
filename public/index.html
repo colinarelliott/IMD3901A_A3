@@ -52,8 +52,22 @@
                 gltf-model="#crane-model"
                 position="-1 0.6 0"
                 scale="0.005 0.005 0.005"
-                shadow
-            ></a-entity>
+                shadow>
+                <a-entity
+                    id="crane-magnet1"
+                    geometry="primitive: cylinder; height: 2; radius: 2.5;"
+                    position="67 82 0"
+                    rotation="0 0 0"
+                    material="color: #000000;"
+                ></a-entity>
+                <a-entity
+                    id="magnet-cable1"
+                    geometry="primitive: cylinder; height: 5; radius: 0.1;"
+                    position="67 85 0"
+                    rotation="0 0 0"
+                    material="color: #000000;"
+                ></a-entity>
+            </a-entity>
 
             <!--DEV CAMERA-->
             <a-entity 
