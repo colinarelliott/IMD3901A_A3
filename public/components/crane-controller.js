@@ -55,8 +55,8 @@ AFRAME.registerComponent('crane-controller', {
                 break;
             case 32: //SPACE - !!!!THIS IS NOT WORKING!!!!
                 //animate the magnet down to 64 and then back up to 82
-                magnet1.setAttribute('animation', {property: 'position', to: {x: CONTEXT.data.magnetPosX, y: 64, z: 0}, dur: 1000, autoplay: true});
-                setTimeout(magnet1.setAttribute('animation', {property: 'position', to: {x: CONTEXT.data.magnetPosX, y: 82, z: 0}, dur: 1000, autoplay: true}), 1000);
+                magnet1.setAttribute('animation__drop', {property: 'position', to: {x: CONTEXT.data.magnetPosX, y: 64, z: 0}, dur: 1000, autoplay: true});
+                setTimeout(magnet1.setAttribute('animation__return', {property: 'position', to: {x: CONTEXT.data.magnetPosX, y: 82, z: 0}, dur: 1000, autoplay: true}), 1000);
                 break;
             default:
                 break;
