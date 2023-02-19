@@ -2,7 +2,7 @@
 
 AFRAME.registerComponent('crane-controller', {
     schema: {
-        rotation: {type: 'number', default: -90},
+        rotation: {type: 'number', default: -120},
         magnetPosX: {type: 'number', default: 65},
     },
     init: function () {
@@ -34,10 +34,10 @@ AFRAME.registerComponent('crane-controller', {
                 if (CONTEXT.data.magnetPosX < 65) {CONTEXT.data.magnetPosX += 1;}
                 break;
             case 65: //A
-                CONTEXT.data.rotation += 1;
+                if (CONTEXT.data.rotation < -75) {CONTEXT.data.rotation += 1;}
                 break;
             case 37: //LEFT
-                CONTEXT.data.rotation += 1;
+                if (CONTEXT.data.rotation < -75) {CONTEXT.data.rotation += 1;}
                 break;
             case 83: //S
                 if (CONTEXT.data.magnetPosX > 25) {CONTEXT.data.magnetPosX -= 1;}
@@ -46,10 +46,10 @@ AFRAME.registerComponent('crane-controller', {
                 if (CONTEXT.data.magnetPosX > 25) {CONTEXT.data.magnetPosX -= 1;}
                 break;
             case 68: //D
-                CONTEXT.data.rotation -= 1;
+            if (CONTEXT.data.rotation > -210) {CONTEXT.data.rotation -= 1;}
                 break;
             case 39: //RIGHT
-                CONTEXT.data.rotation -= 1;
+                if (CONTEXT.data.rotation > -210) {CONTEXT.data.rotation -= 1;}
                 break;
             case 32: //SPACE
                 break;
