@@ -21,7 +21,7 @@ AFRAME.registerComponent('crane-controller', {
         crane1.setAttribute('animation', {property: 'rotation', to: {x: 0, y: CONTEXT.data.rotation, z: 0}, dur: 100});
 
         //animate the magnet to the new position
-        magnet1.setAttribute('position', CONTEXT.data.magnetPosX + ' 82 0');
+        magnet1.setAttribute('animation', {property: 'position', to: {x: CONTEXT.data.magnetPosX, y: 82, z: 0}, dur: 100});
     },
 
     onKeydown: function(evt) {
