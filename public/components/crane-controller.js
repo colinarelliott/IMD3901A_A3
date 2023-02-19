@@ -3,7 +3,7 @@
 AFRAME.registerComponent('crane-controller', {
     schema: {
         rotation: {type: 'number', default: -90},
-        magnetPosX: {type: 'number', default: 67},
+        magnetPosX: {type: 'number', default: 65},
     },
     init: function () {
         const CONTEXT = this;
@@ -28,10 +28,10 @@ AFRAME.registerComponent('crane-controller', {
         const CONTEXT = this;
         switch(evt.keyCode) {
             case 87: //W
-                CONTEXT.data.magnetPosX += 1;
+            if (CONTEXT.data.magnetPosX < 65) {CONTEXT.data.magnetPosX += 1;}
                 break;
             case 38: //UP
-                CONTEXT.data.magnetPosX += 1;
+                if (CONTEXT.data.magnetPosX < 65) {CONTEXT.data.magnetPosX += 1;}
                 break;
             case 65: //A
                 CONTEXT.data.rotation += 1;
@@ -40,10 +40,10 @@ AFRAME.registerComponent('crane-controller', {
                 CONTEXT.data.rotation += 1;
                 break;
             case 83: //S
-                CONTEXT.data.magnetPosX -= 1;
+                if (CONTEXT.data.magnetPosX > 25) {CONTEXT.data.magnetPosX -= 1;}
                 break;
             case 40: //DOWN
-                CONTEXT.data.magnetPosX -= 1;
+                if (CONTEXT.data.magnetPosX > 25) {CONTEXT.data.magnetPosX -= 1;}
                 break;
             case 68: //D
                 CONTEXT.data.rotation -= 1;
