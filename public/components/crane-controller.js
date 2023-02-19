@@ -25,7 +25,9 @@ AFRAME.registerComponent('crane-controller', {
     },
 
     onKeydown: function(evt) {
+        console.log(evt.keyCode)
         const CONTEXT = this;
+        const magnet1 = document.querySelector('#crane-magnet1');
         switch(evt.keyCode) {
             case 87: //W
             if (CONTEXT.data.magnetPosX < 65) {CONTEXT.data.magnetPosX += 1;}
@@ -51,7 +53,10 @@ AFRAME.registerComponent('crane-controller', {
             case 39: //RIGHT
                 if (CONTEXT.data.rotation > -210) {CONTEXT.data.rotation -= 1;}
                 break;
-            case 32: //SPACE
+            case 32: //SPACE - !!!!THIS IS NOT WORKING!!!!
+                //animate the magnet down to 64 and then back up to 82
+                magnet1.setAttribute('animation', {property: 'position', to: {x: CONTEXT.data.magnetPosX, y: 64, z: 0}, dur: 1000, autoplay: true});
+                setTimeout(magnet1.setAttribute('animation', {property: 'position', to: {x: CONTEXT.data.magnetPosX, y: 82, z: 0}, dur: 1000, autoplay: true}), 1000);
                 break;
             default:
                 break;
