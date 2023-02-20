@@ -38,6 +38,7 @@ AFRAME.registerComponent('crane-controller', {
     },
 
     tick: function () {
+        let socket = io();
         const CONTEXT = this;
         //instantiate crane controls for both cranes
         let crane = document.querySelector('#crane'+CONTEXT.data.craneToControl);
@@ -46,6 +47,7 @@ AFRAME.registerComponent('crane-controller', {
         let otherCrane = document.querySelector('#crane'+(CONTEXT.data.craneToControl+1));
         let otherMagnet = document.querySelector('#crane-magnet'+(CONTEXT.data.craneToControl+1));
         let otherCable = document.querySelector('#magnet-cable'+(CONTEXT.data.craneToControl+1));
+        let otherCraneNum = CONTEXT.data.craneToControl+1;
         //if this is player two, swap the cranes
         if (CONTEXT.data.craneToControl === 2) {
             crane = document.querySelector('#crane'+CONTEXT.data.craneToControl);
@@ -54,6 +56,7 @@ AFRAME.registerComponent('crane-controller', {
             otherCrane = document.querySelector('#crane'+(CONTEXT.data.craneToControl-1));
             otherMagnet = document.querySelector('#crane-magnet'+(CONTEXT.data.craneToControl-1));
             otherCable = document.querySelector('#magnet-cable'+(CONTEXT.data.craneToControl-1));
+            otherCraneNum = CONTEXT.data.craneToControl-1;
         }
 
         //animate the crane to the new rotation
@@ -63,7 +66,7 @@ AFRAME.registerComponent('crane-controller', {
         magnet.setAttribute('animation', {property: 'position', to: {x: CONTEXT.data.magnetPosX, y: CONTEXT.data.magnetPosY, z: 0}, dur: 50});
 
         //update the length of the magnet cable
-        cable.setAttribute('line', {start: {x: 0, y: 0, z: 0}, end: {x: 0, y: 88 - CONTEXT.data.magnetPosY, z: 0}, color: 'black', opacity: 1})
+        cable.setAttribute('line', {start: {x: 0, y: 0, z: 0}, end: {x: 0, y: 88 - CONTEXT.data.magnetPosY, z: 0}, color: 'black', opacity: 1});
 
         //update the other crane's rotation
         otherCrane.setAttribute('animation', {property: 'rotation', to: {x: 0, y: CONTEXT.data.otherRotation, z: 0}, dur: 10});
@@ -72,7 +75,17 @@ AFRAME.registerComponent('crane-controller', {
         otherMagnet.setAttribute('animation', {property: 'position', to: {x: CONTEXT.data.otherMagnetPosX, y: CONTEXT.data.otherMagnetPosY, z: 0}, dur: 50});
 
         //update the other crane's magnet cable length
-        otherCable.setAttribute('line', {start: {x: 0, y: 0, z: 0}, end: {x: 0, y: 88 - CONTEXT.data.otherMagnetPosY, z: 0}, color: 'black', opacity: 1})
+        otherCable.setAttribute('line', {start: {x: 0, y: 0, z: 0}, end: {x: 0, y: 88 - CONTEXT.data.otherMagnetPosY, z: 0}, color: 'black', opacity: 1});
+
+        //send out an update with the new crane position
+        socket.emit("updateCrane"+CONTEXT.data.craneToControl, CONTEXT.data); //UNTESTED
+
+        //listen for updates from the other crane, update the other crane's position
+        socket.on('updateCrane'+(otherCraneNum), (data) => {
+            CONTEXT.data.otherRotation = data.rotation;
+            CONTEXT.data.otherMagnetPosX = data.magnetPosX;
+            CONTEXT.data.otherMagnetPosY = data.magnetPosY; //UNTESTED
+        });
     },
 
     onKeydown: function(evt) {
