@@ -30,18 +30,17 @@ AFRAME.registerComponent('crane-controller', {
             console.log("I have disconnected from the server!");
         });
 
-        socket.once('welcome', (playerCount) => {
+        socket.on('welcome', (playerCount) => {
             console.log("Welcome to the server! There are " + playerCount + " player(s) online.");
             CONTEXT.data.craneToControl = playerCount;
             console.log("You are player " + CONTEXT.data.craneToControl);
+        });
 
-        socket.on('updateCrane'+(otherCraneNum), (data) => {
+        socket.on('updateCrane', (data) => { // DOES NOT CHANGE BASED ON CRANE
             CONTEXT.data.otherRotation = data.rotation;
             CONTEXT.data.otherMagnetPosX = data.magnetPosX;
-            CONTEXT.data.otherMagnetPosY = data.magnetPosY; //UNTESTED
+            CONTEXT.data.otherMagnetPosY = data.magnetPosY; //UNTESTED      
         });
-        
-    });
 
     },
 
@@ -55,7 +54,6 @@ AFRAME.registerComponent('crane-controller', {
         let otherCrane = document.querySelector('#crane'+(CONTEXT.data.craneToControl+1));
         let otherMagnet = document.querySelector('#crane-magnet'+(CONTEXT.data.craneToControl+1));
         let otherCable = document.querySelector('#magnet-cable'+(CONTEXT.data.craneToControl+1));
-        let otherCraneNum = CONTEXT.data.craneToControl+1;
 
         //if this is player two, swap the cranes
         if (CONTEXT.data.craneToControl === 2) {

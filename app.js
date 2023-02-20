@@ -20,7 +20,7 @@ io.once('connection', (socket) => {
     socket.join('p1');
     console.log("Player count: " + playerCount);
     console.log('P1 has connected');
-    socket.broadcast.to('p1').emit('welcome', playerCount);
+    socket.emit('welcome', playerCount);
 
     socket.on('updateCrane2', (data) => {
         socket.broadcast.to('p2').emit('updateCrane2', data);
@@ -39,7 +39,7 @@ io.once('connection', (socket) => {
     socket.join('p2');
     console.log("Player count: " + playerCount);
     console.log('P2 has connected');
-    socket.broadcast.to('p2').emit('welcome', playerCount);
+    socket.emit('welcome', playerCount);
 
     socket.on('updateCrane1', (data) => {
         socket.broadcast.to('p1').emit('updateCrane1', data);
