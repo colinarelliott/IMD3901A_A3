@@ -3,7 +3,7 @@ const app = express();
 const http = require('http');
 const { SocketAddress } = require('net');
 const server = http.createServer(app);
-//SOCKET.IO
+//SOCKET.IO server
 const io = require('socket.io')(server);
 
 const LISTEN_PORT = 8080;
@@ -12,7 +12,7 @@ app.get('/', function(req, res) {
     res.sendFile('index.html', {root:__dirname+'/public/'});
 });
 
-//socket.io samples
+//socket.io connection event
 io.on('connection', (socket) => {
     console.log(socket.id + " is connected.");
 
