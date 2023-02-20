@@ -40,11 +40,11 @@ io.on('connect', (socket) => {
     });
 
     socket.on('updateCrane1', (data) => {
-        socket.broadcast.emit('updateCrane1', data);
+        //socket.broadcast.emit('updateCrane1', data);
     });
 
     socket.on('updateCrane2', (data) => {
-        socket.broadcast.emit('updateCrane2', data);
+        //socket.broadcast.emit('updateCrane2', data);
     });
 
     socket.on('disconnect', () => {
