@@ -40,37 +40,65 @@ AFRAME.registerComponent('crane-controller', {
     },
 
     onKeydown: function(evt) {
+        let socket = io();
         //console.log(evt.keyCode) DEBUG KEYCODES
         const CONTEXT = this;
         switch(evt.keyCode) {
             case 87: //W
-            if (CONTEXT.data.magnetPosX < 65) {CONTEXT.data.magnetPosX += 1;}
+            if (CONTEXT.data.magnetPosX < 65) {
+                    CONTEXT.data.magnetPosX += 1;
+                    socket.emit("magnetForward", "magnetForward");
+                }
                 break;
             case 38: //UP
-                if (CONTEXT.data.magnetPosX < 65) {CONTEXT.data.magnetPosX += 1;}
+                if (CONTEXT.data.magnetPosX < 65) {
+                    CONTEXT.data.magnetPosX += 1;
+                    socket.emit("magnetForward", "magnetForward");
+                }
                 break;
             case 65: //A
-                if (CONTEXT.data.rotation < -75) {CONTEXT.data.rotation += 1;}
+                if (CONTEXT.data.rotation < -75) {
+                    CONTEXT.data.rotation += 1;
+                    socket.emit("craneLeft", "craneLeft");
+                }
                 break;
             case 37: //LEFT
-                if (CONTEXT.data.rotation < -75) {CONTEXT.data.rotation += 1;}
+                if (CONTEXT.data.rotation < -75) {
+                    CONTEXT.data.rotation += 1;
+                    socket.emit("craneLeft", "craneLeft");}
                 break;
             case 83: //S
-                if (CONTEXT.data.magnetPosX > 25) {CONTEXT.data.magnetPosX -= 1;}
+                if (CONTEXT.data.magnetPosX > 25) {
+                    CONTEXT.data.magnetPosX -= 1;
+                    socket.emit("magnetBackward", "magnetBackward");
+                }
                 break;
             case 40: //DOWN
-                if (CONTEXT.data.magnetPosX > 25) {CONTEXT.data.magnetPosX -= 1;}
+                if (CONTEXT.data.magnetPosX > 25) {
+                    CONTEXT.data.magnetPosX -= 1;
+                    socket.emit("magnetBackward", "magnetBackward");
+                }
                 break;
             case 68: //D
-            if (CONTEXT.data.rotation > -210) {CONTEXT.data.rotation -= 1;}
+            if (CONTEXT.data.rotation > -210) {
+                CONTEXT.data.rotation -= 1;
+                socket.emit("craneRight", "craneRight");
+            }
                 break;
             case 39: //RIGHT
-                if (CONTEXT.data.rotation > -210) {CONTEXT.data.rotation -= 1;}
+                if (CONTEXT.data.rotation > -210) {
+                    CONTEXT.data.rotation -= 1;
+                    socket.emit("craneRight", "craneRight");
+                }
                 break;
             case 32: //SPACE
                 //animate the magnet down to 44 and then back up to 82
                 CONTEXT.data.magnetPosY = 44;
-                setTimeout(function() {CONTEXT.data.magnetPosY = 82;}, 1000);
+                socket.emit("magnetDown");
+                setTimeout(function() {
+                    CONTEXT.data.magnetPosY = 82;
+                    socket.emit("magnetUp");
+                }, 1000);
                 break;
             default:
                 //do nothing if the key pressed is not one of the above
