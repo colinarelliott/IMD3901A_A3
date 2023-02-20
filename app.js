@@ -12,8 +12,12 @@ app.get('/', function(req, res) {
     res.sendFile('index.html', {root:__dirname+'/public/'});
 });
 
+let playerCount = 0;
+
 //custom socket.io events
 io.on('connection', (socket) => {
+    playerCount++;
+    socket.emit('welcome', playerCount);
 
     socket.on('magnetForward', (arg) => {
         console.log(arg);
