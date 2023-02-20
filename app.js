@@ -12,12 +12,24 @@ app.get('/', function(req, res) {
     res.sendFile('index.html', {root:__dirname+'/public/'});
 });
 
-//socket.io connection event!
+//custom socket.io events
 io.on('connection', (socket) => {
-    console.log(socket.id + " is connected.");
+
+    socket.on('magnetForward', (arg) => {
+        console.log(arg);
+    });
+    socket.on('magnetBackward', (arg) => {
+        console.log(arg);
+    });
+    socket.on('craneLeft', (arg) => {
+        console.log(arg);
+    });
+    socket.on('craneRight', (arg) => {
+        console.log(arg);
+    });
 
     socket.on('disconnect', () => {
-        console.log(socket.id + " has disconnected.");
+        console.log('A user has disconnected');
     });
 });
 
