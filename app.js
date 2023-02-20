@@ -15,7 +15,7 @@ app.get('/', function(req, res) {
 let playerCount = 0;
 
 //custom socket.io events
-io.on('connection', (socket) => {
+io.on('connect', (socket) => {
     playerCount++;
     console.log("Player count: " + playerCount);
     socket.emit('welcome', playerCount);
@@ -37,6 +37,14 @@ io.on('connection', (socket) => {
     });
     socket.on('magnetUp', (arg) => {
         console.log(arg);
+    });
+
+    socket.on('updateCrane1', (data) => {
+        socket.broadcast.emit('updateCrane1', data);
+    });
+
+    socket.on('updateCrane2', (data) => {
+        socket.broadcast.emit('updateCrane2', data);
     });
 
     socket.on('disconnect', () => {
