@@ -4,12 +4,13 @@ AFRAME.registerComponent('crane-controller', {
     schema: {
         rotation: {type: 'number', default: -120},
         magnetPosX: {type: 'number', default: 65},
+        magnetPosY: {type: 'number', default: 80},
     },
     init: function () {
         const CONTEXT = this;
         CONTEXT.onKeydown = CONTEXT.onKeydown.bind(CONTEXT);
         //const crane1 = document.querySelector('#crane1');
-
+ 
         window.addEventListener('keydown', CONTEXT.onKeydown);
     },
 
@@ -18,10 +19,11 @@ AFRAME.registerComponent('crane-controller', {
         const crane1 = document.querySelector('#crane1');
         const magnet1 = document.querySelector('#crane-magnet1');
         //animate the crane to the new rotation
-        crane1.setAttribute('animation', {property: 'rotation', to: {x: 0, y: CONTEXT.data.rotation, z: 0}, dur: 100});
+        crane1.setAttribute('animation', {property: 'rotation', to: {x: 0, y: CONTEXT.data.rotation, z: 0}, dur: 10});
 
         //animate the magnet to the new position
-        magnet1.setAttribute('animation', {property: 'position', to: {x: CONTEXT.data.magnetPosX, y: 82, z: 0}, dur: 100});
+        magnet1.setAttribute('animation', {property: 'position', to: {x: CONTEXT.data.magnetPosX, y: CONTEXT.data.magnetPosY, z: 0}, dur: 10});
+        
     },
 
     onKeydown: function(evt) {
@@ -53,12 +55,13 @@ AFRAME.registerComponent('crane-controller', {
             case 39: //RIGHT
                 if (CONTEXT.data.rotation > -210) {CONTEXT.data.rotation -= 1;}
                 break;
-            case 32: //SPACE - !!!!THIS IS NOT WORKING!!!!
-                //animate the magnet down to 64 and then back up to 82
-                magnet1.setAttribute('animation__drop', {property: 'position', to: {x: CONTEXT.data.magnetPosX, y: 64, z: 0}, dur: 1000, autoplay: true});
-                setTimeout(magnet1.setAttribute('animation__return', {property: 'position', to: {x: CONTEXT.data.magnetPosX, y: 82, z: 0}, dur: 1000, autoplay: true}), 1000);
+            case 32: //SPACE
+                //animate the magnet down to 44 and then back up to 82
+                CONTEXT.data.magnetPosY = 44;
+                setTimeout(function() {CONTEXT.data.magnetPosY = 82;}, 1000);
                 break;
             default:
+                //do nothing if the key pressed is not one of the above
                 break;
         }
     },
