@@ -6,6 +6,8 @@ AFRAME.registerComponent('crane-controller', {
         rotation: {type: 'number', default: -120},
         magnetPosX: {type: 'number', default: 65},
         magnetPosY: {type: 'number', default: 80},
+        //need to add a second rotation parameter for the other crane
+        //find a way to assign the second crane to the second player
     },
     init: function () {
         const CONTEXT = this;
