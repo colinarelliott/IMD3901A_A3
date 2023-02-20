@@ -14,6 +14,45 @@ app.get('/', function(req, res) {
 
 let playerCount = 0;
 
+//player 1 connects
+io.once('connection', (socket) => {
+    playerCount++;
+    socket.join('p1');
+    console.log("Player count: " + playerCount);
+    console.log('P1 has connected');
+    socket.broadcast.to('p1').emit('welcome', playerCount);
+
+    socket.on('updateCrane2', (data) => {
+        socket.broadcast.to('p2').emit('updateCrane2', data);
+    });
+
+    socket.on('disconnect', () => {
+        playerCount--;
+        console.log("Player count: " + playerCount);
+        console.log('P1 has disconnected');
+    });
+});
+
+//player 2 connects
+io.once('connection', (socket) => {
+    playerCount++;
+    socket.join('p2');
+    console.log("Player count: " + playerCount);
+    console.log('P2 has connected');
+    socket.broadcast.to('p2').emit('welcome', playerCount);
+
+    socket.on('updateCrane1', (data) => {
+        socket.broadcast.to('p1').emit('updateCrane1', data);
+    });
+
+    socket.on('disconnect', () => {
+        playerCount--;
+        console.log("Player count: " + playerCount);
+        console.log('P2 has disconnected');
+    });
+});
+
+/*
 //custom socket.io events
 io.on('connect', (socket) => {
     playerCount++;
@@ -52,7 +91,7 @@ io.on('connect', (socket) => {
         console.log("Player count: " + playerCount);
         console.log('A user has disconnected');
     });
-});
+});*/
 
 app.use(express.static(__dirname + '/public'));
 server.listen(LISTEN_PORT);

@@ -22,24 +22,30 @@ AFRAME.registerComponent('crane-controller', {
         window.addEventListener('keyup', CONTEXT.onKeyup);
 
         let socket = io();
-        socket.on('connect', (userData) => {
+        socket.once('connect', (userData) => {
             console.log("I have connected to the server!");
         });
         
-        socket.on('disconnect', () => {
+        socket.once('disconnect', () => {
             console.log("I have disconnected from the server!");
         });
 
-        socket.on('welcome', (playerCount) => {
+        socket.once('welcome', (playerCount) => {
             console.log("Welcome to the server! There are " + playerCount + " player(s) online.");
             CONTEXT.data.craneToControl = playerCount;
             console.log("You are player " + CONTEXT.data.craneToControl);
+
+        socket.on('updateCrane'+(otherCraneNum), (data) => {
+            CONTEXT.data.otherRotation = data.rotation;
+            CONTEXT.data.otherMagnetPosX = data.magnetPosX;
+            CONTEXT.data.otherMagnetPosY = data.magnetPosY; //UNTESTED
         });
+        
+    });
 
     },
 
     tick: function () {
-        let socket = io();
         const CONTEXT = this;
 
         //instantiate crane controls for both cranes
@@ -79,13 +85,6 @@ AFRAME.registerComponent('crane-controller', {
 
         //update the other crane's magnet cable length
         otherCable.setAttribute('line', {start: {x: 0, y: 0, z: 0}, end: {x: 0, y: 88 - CONTEXT.data.otherMagnetPosY, z: 0}, color: 'black', opacity: 1});
-
-        //listen for updates from the other crane, update the other crane's position
-        socket.on('updateCrane'+(otherCraneNum), (data) => {
-            CONTEXT.data.otherRotation = data.rotation;
-            CONTEXT.data.otherMagnetPosX = data.magnetPosX;
-            CONTEXT.data.otherMagnetPosY = data.magnetPosY; //UNTESTED
-        });
     },
 
     onKeydown: function(evt) {
@@ -96,71 +95,54 @@ AFRAME.registerComponent('crane-controller', {
             case 87: //W
             if (CONTEXT.data.magnetPosX < 65) {
                     CONTEXT.data.magnetPosX += 1;
-                    socket.emit("magnetForward", "magnetForward");
-                    //send out an update with the new crane position
                     socket.emit("updateCrane"+CONTEXT.data.craneToControl, CONTEXT.data); //UNTESTED
                 }
                 break;
             case 38: //UP
                 if (CONTEXT.data.magnetPosX < 65) {
                     CONTEXT.data.magnetPosX += 1;
-                    socket.emit("magnetForward", "magnetForward");
-                    //send out an update with the new crane position
                     socket.emit("updateCrane"+CONTEXT.data.craneToControl, CONTEXT.data); //UNTESTED
                 }
                 break;
             case 65: //A
                 if (CONTEXT.data.rotation < -75) {
                     CONTEXT.data.rotation += 1;
-                    socket.emit("craneLeft", "craneLeft");
-                    //send out an update with the new crane position
                     socket.emit("updateCrane"+CONTEXT.data.craneToControl, CONTEXT.data); //UNTESTED
                 }
                 break;
             case 37: //LEFT
                 if (CONTEXT.data.rotation < -75) {
                     CONTEXT.data.rotation += 1;
-                    socket.emit("craneLeft", "craneLeft");}
-                    //send out an update with the new crane position
                     socket.emit("updateCrane"+CONTEXT.data.craneToControl, CONTEXT.data); //UNTESTED
+                }
                 break;
             case 83: //S
                 if (CONTEXT.data.magnetPosX > 25) {
                     CONTEXT.data.magnetPosX -= 1;
-                    socket.emit("magnetBackward", "magnetBackward");
-                    //send out an update with the new crane position
                     socket.emit("updateCrane"+CONTEXT.data.craneToControl, CONTEXT.data); //UNTESTED
                 }
                 break;
             case 40: //DOWN
                 if (CONTEXT.data.magnetPosX > 25) {
                     CONTEXT.data.magnetPosX -= 1;
-                    socket.emit("magnetBackward", "magnetBackward");
-                    //send out an update with the new crane position
                     socket.emit("updateCrane"+CONTEXT.data.craneToControl, CONTEXT.data); //UNTESTED
                 }
                 break;
             case 68: //D
             if (CONTEXT.data.rotation > -210) {
                 CONTEXT.data.rotation -= 1;
-                socket.emit("craneRight", "craneRight");
-                //send out an update with the new crane position
                 socket.emit("updateCrane"+CONTEXT.data.craneToControl, CONTEXT.data); //UNTESTED
             }
                 break;
             case 39: //RIGHT
                 if (CONTEXT.data.rotation > -210) {
                     CONTEXT.data.rotation -= 1;
-                    socket.emit("craneRight", "craneRight");
-                    //send out an update with the new crane position
                     socket.emit("updateCrane"+CONTEXT.data.craneToControl, CONTEXT.data); //UNTESTED
                 }
                 break;
             case 32: //SPACE
                 //animate the magnet down to 44 and then back up to 82
                 CONTEXT.data.magnetPosY = 44;
-                socket.emit("magnetDown", "magnetDown");
-                //send out an update with the new crane position
                 socket.emit("updateCrane"+CONTEXT.data.craneToControl, CONTEXT.data); //UNTESTED
                 break;
             default:
@@ -187,6 +169,9 @@ AFRAME.registerComponent('crane-controller', {
     },
 
     remove: function() {
+        let socket = io();
+
+        socket.removeAllListeners();
         CONTEXT.removeEventListeners();
     }
 });
