@@ -31,7 +31,13 @@ io.on('connection', (socket) => {
     socket.on('craneRight', (arg) => {
         console.log(arg);
     });
-
+    socket.on('magnetDown', (arg) => {
+        console.log(arg);
+    });
+    socket.on('magnetUp', (arg) => {
+        console.log(arg);
+    });
+    
     socket.on('disconnect', () => {
         console.log('A user has disconnected');
     });
