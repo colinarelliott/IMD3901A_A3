@@ -12,6 +12,15 @@ AFRAME.registerComponent('crane-controller', {
         //const crane1 = document.querySelector('#crane1');
  
         window.addEventListener('keydown', CONTEXT.onKeydown);
+
+        let socket = io();
+        socket.on('connect', (userData) => {
+            console.log("I have connected to the server!");
+        });
+        
+        socket.on('disconnect', () => {
+            console.log("I have disconnected from the server!");
+        });
     },
 
     tick: function () {
@@ -31,9 +40,8 @@ AFRAME.registerComponent('crane-controller', {
     },
 
     onKeydown: function(evt) {
-        console.log(evt.keyCode)
+        //console.log(evt.keyCode) DEBUG KEYCODES
         const CONTEXT = this;
-        const magnet1 = document.querySelector('#crane-magnet1');
         switch(evt.keyCode) {
             case 87: //W
             if (CONTEXT.data.magnetPosX < 65) {CONTEXT.data.magnetPosX += 1;}
