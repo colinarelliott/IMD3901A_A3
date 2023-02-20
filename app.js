@@ -17,6 +17,7 @@ let playerCount = 0;
 //custom socket.io events
 io.on('connection', (socket) => {
     playerCount++;
+    console.log("Player count: " + playerCount);
     socket.emit('welcome', playerCount);
 
     socket.on('magnetForward', (arg) => {
@@ -37,8 +38,10 @@ io.on('connection', (socket) => {
     socket.on('magnetUp', (arg) => {
         console.log(arg);
     });
-    
+
     socket.on('disconnect', () => {
+        playerCount--;
+        console.log("Player count: " + playerCount);
         console.log('A user has disconnected');
     });
 });
