@@ -6,6 +6,9 @@ AFRAME.registerComponent('crane-controller', {
         rotation: {type: 'number', default: -120},
         magnetPosX: {type: 'number', default: 65},
         magnetPosY: {type: 'number', default: 80},
+        otherRotation: {type: 'number', default: -120},
+        otherMagnetPosX: {type: 'number', default: 65},
+        otherMagnetPosY: {type: 'number', default: 80},
         //need to add a second rotation parameter for the other crane
         //find a way to assign the second crane to the second player
     },
@@ -36,9 +39,22 @@ AFRAME.registerComponent('crane-controller', {
 
     tick: function () {
         const CONTEXT = this;
-        const crane = document.querySelector('#crane'+CONTEXT.data.craneToControl);
-        const magnet = document.querySelector('#crane-magnet'+CONTEXT.data.craneToControl);
-        const cable = document.querySelector('#magnet-cable'+CONTEXT.data.craneToControl);
+        //instantiate crane controls for both cranes
+        let crane = document.querySelector('#crane'+CONTEXT.data.craneToControl);
+        let magnet = document.querySelector('#crane-magnet'+CONTEXT.data.craneToControl);
+        let cable = document.querySelector('#magnet-cable'+CONTEXT.data.craneToControl);
+        let otherCrane = document.querySelector('#crane'+(CONTEXT.data.craneToControl+1));
+        let otherMagnet = document.querySelector('#crane-magnet'+(CONTEXT.data.craneToControl+1));
+        let otherCable = document.querySelector('#magnet-cable'+(CONTEXT.data.craneToControl+1));
+        //if this is player two, swap the cranes
+        if (CONTEXT.data.craneToControl === 2) {
+            crane = document.querySelector('#crane'+CONTEXT.data.craneToControl);
+            magnet = document.querySelector('#crane-magnet'+CONTEXT.data.craneToControl);
+            cable = document.querySelector('#magnet-cable'+CONTEXT.data.craneToControl);
+            otherCrane = document.querySelector('#crane'+(CONTEXT.data.craneToControl-1));
+            otherMagnet = document.querySelector('#crane-magnet'+(CONTEXT.data.craneToControl-1));
+            otherCable = document.querySelector('#magnet-cable'+(CONTEXT.data.craneToControl-1));
+        }
 
         //animate the crane to the new rotation
         crane.setAttribute('animation', {property: 'rotation', to: {x: 0, y: CONTEXT.data.rotation, z: 0}, dur: 10});
@@ -48,7 +64,15 @@ AFRAME.registerComponent('crane-controller', {
 
         //update the length of the magnet cable
         cable.setAttribute('line', {start: {x: 0, y: 0, z: 0}, end: {x: 0, y: 88 - CONTEXT.data.magnetPosY, z: 0}, color: 'black', opacity: 1})
-        
+
+        //update the other crane's rotation
+        otherCrane.setAttribute('animation', {property: 'rotation', to: {x: 0, y: CONTEXT.data.otherRotation, z: 0}, dur: 10});
+
+        //update the other crane's magnet position
+        otherMagnet.setAttribute('animation', {property: 'position', to: {x: CONTEXT.data.otherMagnetPosX, y: CONTEXT.data.otherMagnetPosY, z: 0}, dur: 50});
+
+        //update the other crane's magnet cable length
+        otherCable.setAttribute('line', {start: {x: 0, y: 0, z: 0}, end: {x: 0, y: 88 - CONTEXT.data.otherMagnetPosY, z: 0}, color: 'black', opacity: 1})
     },
 
     onKeydown: function(evt) {
