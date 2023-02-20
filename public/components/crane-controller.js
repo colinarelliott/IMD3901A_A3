@@ -94,10 +94,10 @@ AFRAME.registerComponent('crane-controller', {
             case 32: //SPACE
                 //animate the magnet down to 44 and then back up to 82
                 CONTEXT.data.magnetPosY = 44;
-                socket.emit("magnetDown");
+                socket.emit("magnetDown", "magnetDown");
                 setTimeout(function() {
                     CONTEXT.data.magnetPosY = 82;
-                    socket.emit("magnetUp");
+                    socket.emit("magnetUp", "magnetUp");
                 }, 1000);
                 break;
             default:
