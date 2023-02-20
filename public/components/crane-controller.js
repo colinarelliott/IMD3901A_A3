@@ -9,9 +9,11 @@ AFRAME.registerComponent('crane-controller', {
     init: function () {
         const CONTEXT = this;
         CONTEXT.onKeydown = CONTEXT.onKeydown.bind(CONTEXT);
+        CONTEXT.onKeyup = CONTEXT.onKeyup.bind(CONTEXT);
         //const crane1 = document.querySelector('#crane1');
  
         window.addEventListener('keydown', CONTEXT.onKeydown);
+        window.addEventListener('keyup', CONTEXT.onKeyup);
 
         let socket = io();
         socket.on('connect', (userData) => {
@@ -28,6 +30,7 @@ AFRAME.registerComponent('crane-controller', {
         const crane1 = document.querySelector('#crane1');
         const magnet1 = document.querySelector('#crane-magnet1');
         const cable1 = document.querySelector('#magnet-cable1');
+
         //animate the crane to the new rotation
         crane1.setAttribute('animation', {property: 'rotation', to: {x: 0, y: CONTEXT.data.rotation, z: 0}, dur: 10});
 
@@ -95,10 +98,23 @@ AFRAME.registerComponent('crane-controller', {
                 //animate the magnet down to 44 and then back up to 82
                 CONTEXT.data.magnetPosY = 44;
                 socket.emit("magnetDown", "magnetDown");
-                setTimeout(function() {
-                    CONTEXT.data.magnetPosY = 82;
-                    socket.emit("magnetUp", "magnetUp");
-                }, 1000);
+                break;
+            default:
+                //do nothing if the key pressed is not one of the above
+                break;
+        }
+    },
+
+    onKeyup: function(evt) {
+        console.log(evt.keyCode+" keyup")
+        
+        const CONTEXT = this;
+        let socket = io();
+        switch(evt.keyCode) { 
+            case 32: //SPACE
+                //animate the magnet down to 44 and then back up to 82
+                CONTEXT.data.magnetPosY = 82;
+                socket.emit("magnetUp", "magnetUp");
                 break;
             default:
                 //do nothing if the key pressed is not one of the above
