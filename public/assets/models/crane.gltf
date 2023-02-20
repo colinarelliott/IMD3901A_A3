@@ -1,0 +1,309 @@
+{
+    "asset" : {
+        "generator" : "Khronos glTF Blender I/O v3.4.50",
+        "version" : "2.0"
+    },
+    "extensionsUsed" : [
+        "KHR_materials_specular",
+        "KHR_materials_ior"
+    ],
+    "scene" : 0,
+    "scenes" : [
+        {
+            "name" : "Scene",
+            "nodes" : [
+                0
+            ]
+        }
+    ],
+    "nodes" : [
+        {
+            "mesh" : 0,
+            "name" : "Tower",
+            "scale" : [
+                0.4451502561569214,
+                1,
+                0.4416999816894531
+            ],
+            "translation" : [
+                2,
+                0,
+                -2
+            ]
+        }
+    ],
+    "materials" : [
+        {
+            "doubleSided" : true,
+            "name" : "Blue ",
+            "pbrMetallicRoughness" : {
+                "baseColorFactor" : [
+                    0.6190295815467834,
+                    0.7770873308181763,
+                    0.8000000715255737,
+                    1
+                ],
+                "metallicFactor" : 0,
+                "roughnessFactor" : 0
+            }
+        },
+        {
+            "doubleSided" : true,
+            "name" : "Crane",
+            "pbrMetallicRoughness" : {
+                "baseColorFactor" : [
+                    0.8000000715255737,
+                    0.4625789523124695,
+                    0.05863003805279732,
+                    1
+                ],
+                "metallicFactor" : 0.4046242833137512,
+                "roughnessFactor" : 0.5
+            }
+        },
+        {
+            "doubleSided" : true,
+            "extensions" : {
+                "KHR_materials_specular" : {
+                    "specularColorFactor" : [
+                        0.7470461947004816,
+                        0.7470461947004816,
+                        0.7470461947004816
+                    ]
+                },
+                "KHR_materials_ior" : {
+                    "ior" : 1.4500000476837158
+                }
+            },
+            "name" : "Steel",
+            "pbrMetallicRoughness" : {
+                "baseColorFactor" : [
+                    0.08001308143138885,
+                    0.08001308143138885,
+                    0.08001308143138885,
+                    1
+                ],
+                "metallicFactor" : 0.8670520186424255,
+                "roughnessFactor" : 0.3034679889678955
+            }
+        }
+    ],
+    "meshes" : [
+        {
+            "name" : "Cube",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 0,
+                        "TEXCOORD_0" : 1,
+                        "NORMAL" : 2
+                    },
+                    "indices" : 3,
+                    "material" : 0
+                },
+                {
+                    "attributes" : {
+                        "POSITION" : 4,
+                        "TEXCOORD_0" : 5,
+                        "NORMAL" : 6
+                    },
+                    "indices" : 7,
+                    "material" : 1
+                },
+                {
+                    "attributes" : {
+                        "POSITION" : 8,
+                        "TEXCOORD_0" : 9,
+                        "NORMAL" : 10
+                    },
+                    "indices" : 11,
+                    "material" : 2
+                }
+            ]
+        }
+    ],
+    "accessors" : [
+        {
+            "bufferView" : 0,
+            "componentType" : 5126,
+            "count" : 9,
+            "max" : [
+                3.53684139251709,
+                94.2795181274414,
+                10.872082710266113
+            ],
+            "min" : [
+                -13.67289924621582,
+                94.2795181274414,
+                -1.3605375289916992
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 1,
+            "componentType" : 5126,
+            "count" : 9,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 2,
+            "componentType" : 5126,
+            "count" : 9,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 3,
+            "componentType" : 5123,
+            "count" : 24,
+            "type" : "SCALAR"
+        },
+        {
+            "bufferView" : 4,
+            "componentType" : 5126,
+            "count" : 8435,
+            "max" : [
+                156.06655883789062,
+                97.3267593383789,
+                10.872082710266113
+            ],
+            "min" : [
+                -43.2889518737793,
+                -1,
+                -1.3605375289916992
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 5,
+            "componentType" : 5126,
+            "count" : 8435,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 6,
+            "componentType" : 5126,
+            "count" : 8435,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 7,
+            "componentType" : 5123,
+            "count" : 16842,
+            "type" : "SCALAR"
+        },
+        {
+            "bufferView" : 8,
+            "componentType" : 5126,
+            "count" : 209,
+            "max" : [
+                156.06655883789062,
+                95.58338165283203,
+                12.052762985229492
+            ],
+            "min" : [
+                -55.424991607666016,
+                84.76679992675781,
+                -2.5412182807922363
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 9,
+            "componentType" : 5126,
+            "count" : 209,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 10,
+            "componentType" : 5126,
+            "count" : 209,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 11,
+            "componentType" : 5123,
+            "count" : 432,
+            "type" : "SCALAR"
+        }
+    ],
+    "bufferViews" : [
+        {
+            "buffer" : 0,
+            "byteLength" : 108,
+            "byteOffset" : 0,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 72,
+            "byteOffset" : 108,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 108,
+            "byteOffset" : 180,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 48,
+            "byteOffset" : 288,
+            "target" : 34963
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 101220,
+            "byteOffset" : 336,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 67480,
+            "byteOffset" : 101556,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 101220,
+            "byteOffset" : 169036,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 33684,
+            "byteOffset" : 270256,
+            "target" : 34963
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 2508,
+            "byteOffset" : 303940,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 1672,
+            "byteOffset" : 306448,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 2508,
+            "byteOffset" : 308120,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 864,
+            "byteOffset" : 310628,
+            "target" : 34963
+        }
+    ],
+    "buffers" : [
+        {
+            "byteLength" : 311492,
+            "uri" : "crane.bin"
+        }
+    ]
+}
