@@ -18,11 +18,15 @@ AFRAME.registerComponent('crane-controller', {
         const CONTEXT = this;
         const crane1 = document.querySelector('#crane1');
         const magnet1 = document.querySelector('#crane-magnet1');
+        const cable1 = document.querySelector('#magnet-cable1');
         //animate the crane to the new rotation
         crane1.setAttribute('animation', {property: 'rotation', to: {x: 0, y: CONTEXT.data.rotation, z: 0}, dur: 10});
 
         //animate the magnet to the new position
         magnet1.setAttribute('animation', {property: 'position', to: {x: CONTEXT.data.magnetPosX, y: CONTEXT.data.magnetPosY, z: 0}, dur: 10});
+
+        //update the length of the magnet cable
+        cable1.setAttribute('line', {start: {x: 0, y: 0, z: 0}, end: {x: 0, y: 88 - CONTEXT.data.magnetPosY, z: 0}, color: 'black', opacity: 1})
         
     },
 
