@@ -14,14 +14,20 @@ app.get('/', function(req, res) {
 
 let playerCount = 0;
 
-//custom socket.io events
-io.on('connection', (socket) => {
+//connection counter
+io.once('connection', (socket) => {
     playerCount++;
     console.log("Player count: " + playerCount);
     socket.emit('welcome', playerCount);
+});
+
+
+//custom socket.io events
+io.on('connection', (socket) => {
 
     socket.on('magnetForward', (arg) => {
         console.log(arg);
+        //socket.broadcast.emit('magnetForward', arg); maybe?
     });
     socket.on('magnetBackward', (arg) => {
         console.log(arg);
@@ -37,12 +43,6 @@ io.on('connection', (socket) => {
     });
     socket.on('magnetUp', (arg) => {
         console.log(arg);
-    });
-
-    socket.on('disconnect', () => {
-        playerCount--;
-        console.log("Player count: " + playerCount);
-        console.log('A user has disconnected');
     });
 });
 
