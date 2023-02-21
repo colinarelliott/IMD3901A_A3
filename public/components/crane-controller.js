@@ -14,13 +14,13 @@ AFRAME.registerComponent('crane-controller', {
     },
     init: function () {
         const CONTEXT = this;
+        CONTEXT.camera = document.querySelector('#camera'); //get the camera
         //bind the functions to the context of the component
         CONTEXT.onKeydown = CONTEXT.onKeydown.bind(CONTEXT); //this function will be executed on keydown
         CONTEXT.onKeyup = CONTEXT.onKeyup.bind(CONTEXT); //this function will be executed on keyup
  
         window.addEventListener('keydown', CONTEXT.onKeydown); //add the keydown event listener
-        window.addEventListener('keyup', CONTEXT.onKeyup); //add the keyup event listener
-
+        window.addEventListener('keyup', CONTEXT.onKeyup); //add the keyup event listene
         let socket = io(); //connect to the server
 
         //debug connect and disconnect logs
@@ -38,6 +38,18 @@ AFRAME.registerComponent('crane-controller', {
             CONTEXT.data.craneToControl = playerCount;
             console.log("You are player " + CONTEXT.data.craneToControl);
         });
+
+        //receive updateCrane event from the server, update the data of the crane
+        socket.on("updateCrane"+CONTEXT.data.craneToControl, function(data) {
+            CONTEXT.data = data;
+        });
+
+        //create and append the player number text to the 
+        var playerNumberText = document.createElement('a-entity');
+        playerNumberText.setAttribute('id', 'playerNumberText');
+        playerNumberText.setAttribute('position', '0 0.7 -1');
+        playerNumberText.setAttribute('text', 'value: Player ' + CONTEXT.data.craneToControl + '; color: white; align: center; width: 1.5');
+        CONTEXT.camera.appendChild(playerNumberText);
     },
 
     tick: function () {
@@ -53,9 +65,6 @@ AFRAME.registerComponent('crane-controller', {
 
         //if this is player two, swap the cranes
         if (CONTEXT.data.craneToControl === 2) {
-            crane = document.querySelector('#crane'+CONTEXT.data.craneToControl);
-            magnet = document.querySelector('#crane-magnet'+CONTEXT.data.craneToControl);
-            cable = document.querySelector('#magnet-cable'+CONTEXT.data.craneToControl);
             otherCrane = document.querySelector('#crane'+(CONTEXT.data.craneToControl-1));
             otherMagnet = document.querySelector('#crane-magnet'+(CONTEXT.data.craneToControl-1));
             otherCable = document.querySelector('#magnet-cable'+(CONTEXT.data.craneToControl-1));
@@ -138,6 +147,7 @@ AFRAME.registerComponent('crane-controller', {
     //currently just a special case for the magnet so you can hold it down
     onKeyup: function(evt) {
         const CONTEXT = this;
+        let socket = io();
         switch(evt.keyCode) { 
             case 32: //SPACE
                 //animate the magnet back up to 82
@@ -147,22 +157,12 @@ AFRAME.registerComponent('crane-controller', {
                 //do nothing if the key pressed is not one of the above
                 break;
         }
+
+        //update the crane on the server after the player releases a key
+        socket.emit('updateCrane'+CONTEXT.data.craneToControl, CONTEXT.data);
     },
 
-    //because this is called at the beginning of the game, it messes up the player number distribution...
-    update: function (event) {
-        const CONTEXT = this;
-        let socket = io();
-
-        //send an updateCrane event to the server when the crane's data is updated with the crane this player is controlling and the data
-        socket.emit("updateCrane"+CONTEXT.data.craneToControl, CONTEXT.data);
-        
-        //after 10ms, listen for an updateCrane event from the server and update the data
-        setTimeout(function() {
-            socket.on("updateCrane"+CONTEXT.data.craneToControl, function(data) {
-                CONTEXT.data = data;
-            });
-        }, 10); // after 10ms to make sure this happens after the emit
+    updateSchema: function (event) {      
     },
 
     remove: function() {
