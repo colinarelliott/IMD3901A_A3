@@ -22,11 +22,11 @@ AFRAME.registerComponent('crane-controller', {
         window.addEventListener('keyup', CONTEXT.onKeyup);
 
         let socket = io();
-        socket.once('connect', (userData) => {
+        socket.on('connect', (userData) => {
             console.log("I have connected to the server!");
         });
         
-        socket.once('disconnect', () => {
+        socket.on('disconnect', () => {
             console.log("I have disconnected from the server!");
         });
 
@@ -36,12 +36,19 @@ AFRAME.registerComponent('crane-controller', {
             console.log("You are player " + CONTEXT.data.craneToControl);
         });
 
-        socket.on('updateCrane', (data) => { // DOES NOT CHANGE BASED ON CRANE
-            CONTEXT.data.otherRotation = data.rotation;
-            CONTEXT.data.otherMagnetPosX = data.magnetPosX;
-            CONTEXT.data.otherMagnetPosY = data.magnetPosY; //UNTESTED      
-        });
-
+        if (CONTEXT.data.craneToControl === 1) {
+            socket.on('updateCrane2', (data) => {
+                CONTEXT.data.otherRotation = data.rotation;
+                CONTEXT.data.otherMagnetPosX = data.magnetPosX;
+                CONTEXT.data.otherMagnetPosY = data.magnetPosY;     
+            });
+        } else if (CONTEXT.data.craneToControl === 2) {
+            socket.on('updateCrane1', (data) => { 
+                CONTEXT.data.otherRotation = data.rotation;
+                CONTEXT.data.otherMagnetPosX = data.magnetPosX;
+                CONTEXT.data.otherMagnetPosY = data.magnetPosY;
+            });
+        }
     },
 
     tick: function () {
@@ -100,6 +107,7 @@ AFRAME.registerComponent('crane-controller', {
                 if (CONTEXT.data.magnetPosX < 65) {
                     CONTEXT.data.magnetPosX += 1;
                     socket.emit("updateCrane"+CONTEXT.data.craneToControl, CONTEXT.data); //UNTESTED
+                    console.log(CONTEXT.data);
                 }
                 break;
             case 65: //A
