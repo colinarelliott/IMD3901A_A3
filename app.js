@@ -26,13 +26,10 @@ io.on('connection', (socket) => {
     });*/
 
     socket.on('updateCrane2', (data) => {
-        console.log("received updateCrane2"+
-        "\n rotation: "+data.rotation);
         socket.broadcast.emit('updateCrane2', data);
     });
     
     socket.on('updateCrane1', (data) => {
-        console.log("received updateCrane1"+data);
         socket.broadcast.emit('updateCrane1', data);
     });
 
