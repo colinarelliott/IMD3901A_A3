@@ -17,7 +17,6 @@ let playerCount = 0;
 //player 1 connects
 io.on('connection', (socket) => {
     playerCount++;
-    socket.join('p'+playerCount);
     console.log("Player count: " + playerCount);
     console.log('P' + playerCount + ' has connected');
     socket.emit('welcome', playerCount);
@@ -26,6 +25,17 @@ io.on('connection', (socket) => {
         socket.broadcast.to('p2').emit('updateCrane2', data);
     });*/
 
+    socket.on('updateCrane2', (data) => {
+        console.log("received updateCrane2"+
+        "\n rotation: "+data.rotation);
+        socket.broadcast.emit('updateCrane2', data);
+    });
+    
+    socket.on('updateCrane1', (data) => {
+        console.log("received updateCrane1"+data);
+        socket.broadcast.emit('updateCrane1', data);
+    });
+
     socket.on('disconnect', () => {
         console.log('P'+playerCount+' has disconnected');
         playerCount--;
@@ -33,13 +43,7 @@ io.on('connection', (socket) => {
     });
 });
 
-io.on('updateCrane2', (data) => {
-    socket.broadcast.to('p1').emit('updateCrane2', data);
-});
 
-io.on('updateCrane1', (data) => {
-    socket.broadcast.to('p2').emit('updateCrane1', data);
-});
 
  /* P2 Code
 io.on('connection', (socket2) => {
