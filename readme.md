@@ -11,6 +11,11 @@ This repository contains code for an assignment related to one of my university 
 - Must include at least 1 competitive multi-user interaction
 - Visual feedback is essential, demonstrate the state of the system
 
+#### Idea:
+- make a crane board game where each player controls a crane and has to collect containers and load a ship
+- competitive mode: play against each other, see who can collect the most
+- co-op mode: play with each other collecting as many as possible during a time limit
+
 ---
 
 ## Reflection:
