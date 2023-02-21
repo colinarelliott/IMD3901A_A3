@@ -15,42 +15,50 @@ app.get('/', function(req, res) {
 let playerCount = 0;
 
 //player 1 connects
-io.once('connection', (socket) => {
+io.on('connection', (socket) => {
     playerCount++;
-    socket.join('p1');
+    socket.join('p'+playerCount);
     console.log("Player count: " + playerCount);
-    console.log('P1 has connected');
+    console.log('P' + playerCount + ' has connected');
     socket.emit('welcome', playerCount);
 
-    socket.on('updateCrane2', (data) => {
+    /*socket.on('updateCrane2', (data) => {
         socket.broadcast.to('p2').emit('updateCrane2', data);
-    });
+    });*/
 
     socket.on('disconnect', () => {
+        console.log('P'+playerCount+' has disconnected');
         playerCount--;
         console.log("Player count: " + playerCount);
-        console.log('P1 has disconnected');
     });
 });
 
-//player 2 connects
-io.once('connection', (socket) => {
+io.on('updateCrane2', (data) => {
+    socket.broadcast.to('p1').emit('updateCrane2', data);
+});
+
+io.on('updateCrane1', (data) => {
+    socket.broadcast.to('p2').emit('updateCrane1', data);
+});
+
+ /* P2 Code
+io.on('connection', (socket2) => {
     playerCount++;
-    socket.join('p2');
+    socket2.join('p2');
     console.log("Player count: " + playerCount);
     console.log('P2 has connected');
-    socket.emit('welcome', playerCount);
+    socket2.emit('welcome', playerCount);
 
-    socket.on('updateCrane1', (data) => {
-        socket.broadcast.to('p1').emit('updateCrane1', data);
+    socket2.on('updateCrane1', (data) => {
+        socket2.broadcast.to('p1').emit('updateCrane1', data);
     });
 
-    socket.on('disconnect', () => {
+    socket2.on('disconnect', () => {
         playerCount--;
         console.log("Player count: " + playerCount);
         console.log('P2 has disconnected');
     });
-});
+}); */
 
 /*
 //custom socket.io events
