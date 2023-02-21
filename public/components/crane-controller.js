@@ -35,20 +35,6 @@ AFRAME.registerComponent('crane-controller', {
             CONTEXT.data.craneToControl = playerCount;
             console.log("You are player " + CONTEXT.data.craneToControl);
         });
-
-        if (CONTEXT.data.craneToControl === 1) {
-            socket.on('updateCrane2', (data) => {
-                CONTEXT.data.otherRotation = data.rotation;
-                CONTEXT.data.otherMagnetPosX = data.magnetPosX;
-                CONTEXT.data.otherMagnetPosY = data.magnetPosY;     
-            });
-        } else if (CONTEXT.data.craneToControl === 2) {
-            socket.on('updateCrane1', (data) => { 
-                CONTEXT.data.otherRotation = data.rotation;
-                CONTEXT.data.otherMagnetPosX = data.magnetPosX;
-                CONTEXT.data.otherMagnetPosY = data.magnetPosY;
-            });
-        }
     },
 
     tick: function () {
@@ -100,56 +86,46 @@ AFRAME.registerComponent('crane-controller', {
             case 87: //W
             if (CONTEXT.data.magnetPosX < 65) {
                     CONTEXT.data.magnetPosX += 1;
-                    socket.emit("updateCrane"+CONTEXT.data.craneToControl, CONTEXT.data); //UNTESTED
                 }
                 break;
             case 38: //UP
                 if (CONTEXT.data.magnetPosX < 65) {
                     CONTEXT.data.magnetPosX += 1;
-                    socket.emit("updateCrane"+CONTEXT.data.craneToControl, CONTEXT.data); //UNTESTED
-                    console.log(CONTEXT.data);
                 }
                 break;
             case 65: //A
                 if (CONTEXT.data.rotation < -75) {
                     CONTEXT.data.rotation += 1;
-                    socket.emit("updateCrane"+CONTEXT.data.craneToControl, CONTEXT.data); //UNTESTED
                 }
                 break;
             case 37: //LEFT
                 if (CONTEXT.data.rotation < -75) {
                     CONTEXT.data.rotation += 1;
-                    socket.emit("updateCrane"+CONTEXT.data.craneToControl, CONTEXT.data); //UNTESTED
                 }
                 break;
             case 83: //S
                 if (CONTEXT.data.magnetPosX > 25) {
                     CONTEXT.data.magnetPosX -= 1;
-                    socket.emit("updateCrane"+CONTEXT.data.craneToControl, CONTEXT.data); //UNTESTED
                 }
                 break;
             case 40: //DOWN
                 if (CONTEXT.data.magnetPosX > 25) {
                     CONTEXT.data.magnetPosX -= 1;
-                    socket.emit("updateCrane"+CONTEXT.data.craneToControl, CONTEXT.data); //UNTESTED
                 }
                 break;
             case 68: //D
             if (CONTEXT.data.rotation > -210) {
                 CONTEXT.data.rotation -= 1;
-                socket.emit("updateCrane"+CONTEXT.data.craneToControl, CONTEXT.data); //UNTESTED
             }
                 break;
             case 39: //RIGHT
                 if (CONTEXT.data.rotation > -210) {
                     CONTEXT.data.rotation -= 1;
-                    socket.emit("updateCrane"+CONTEXT.data.craneToControl, CONTEXT.data); //UNTESTED
                 }
                 break;
             case 32: //SPACE
                 //animate the magnet down to 44 and then back up to 82
                 CONTEXT.data.magnetPosY = 44;
-                socket.emit("updateCrane"+CONTEXT.data.craneToControl, CONTEXT.data); //UNTESTED
                 break;
             default:
                 //do nothing if the key pressed is not one of the above
@@ -172,6 +148,18 @@ AFRAME.registerComponent('crane-controller', {
                 //do nothing if the key pressed is not one of the above
                 break;
         }
+    },
+    
+    update: function (evt) {
+        const CONTEXT = this;
+        let socket = io();
+        socket.emit("updateCrane"+CONTEXT.data.craneToControl, CONTEXT.data);
+
+        setTimeout(function() {
+            socket.on("updateCrane"+CONTEXT.data.craneToControl, function(data) {
+                CONTEXT.data = data;
+            });
+        }, 100); // after 100ms to make sure the data is sent
     },
 
     remove: function() {
