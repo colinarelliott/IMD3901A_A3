@@ -19,9 +19,12 @@ let playerCount = 0;
 
 //when a player connects, increment the player counter and log the connection
 io.on('connection', (socket) => {
-    playerCount++;
-    console.log("Player count: " + playerCount);
-    console.log('P' + playerCount + ' has connected');
+    //ADD AN IF STATEMENT SO THAT ONLY CONNECTIONS INCREMENT THE PLAYER COUNT AND 
+    if (playerCount < 2) {
+        playerCount++;
+        console.log("Player count: " + playerCount);
+        console.log('P' + playerCount + ' has connected');
+    }
     //send welcome event with player number to the client
     socket.emit('welcome', playerCount);
 
@@ -37,9 +40,11 @@ io.on('connection', (socket) => {
 
     //if disconnect event is received, decrement the player counter and log the disconnection
     socket.on('disconnect', () => {
-        console.log('P'+playerCount+' has disconnected');
-        playerCount--;
-        console.log("Player count: " + playerCount);
+        if (playerCount > 0) {
+            console.log('P'+playerCount+' has disconnected');
+            playerCount--;
+            console.log("Player count: " + playerCount);
+        }
     });
 });
 

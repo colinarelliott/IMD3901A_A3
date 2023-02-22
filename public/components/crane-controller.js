@@ -33,23 +33,25 @@ AFRAME.registerComponent('crane-controller', {
         });
 
         //receive welcome event from the server with player number, set the craneToControl variable to the player number
-        socket.on('welcome', (playerCount) => {
-            console.log("Welcome to the server! There are " + playerCount + " player(s) online.");
-            CONTEXT.data.craneToControl = playerCount;
-            console.log("You are player " + CONTEXT.data.craneToControl);
-        });
+        setTimeout( function() {
+            socket.on('welcome', (playerCount) => {
+                console.log("You are player " + playerCount);
+                //create and append the player number text to the camera
+                var playerNumberText = document.createElement('a-entity');
+                playerNumberText.setAttribute('id', 'playerNumberText');
+                playerNumberText.setAttribute('position', '0 0.7 -1');
+                playerNumberText.setAttribute('text', 'value: Player ' + playerCount + '; color: white; align: center; width: 1.5');
+                CONTEXT.camera.appendChild(playerNumberText);
+                CONTEXT.data.craneToControl = playerCount;
+            });
+        }), 100; //wait 100ms before setting up the welcome event listener
 
         //receive updateCrane event from the server, update the data of the crane
-        socket.on("updateCrane"+CONTEXT.data.craneToControl, function(data) {
-            CONTEXT.data = data;
+        socket.on("updateCrane"+CONTEXT.data.craneToControl, function(otherCranesData) {
+            CONTEXT.data.otherRotation = otherCranesData.rotation;
+            CONTEXT.data.otherMagnetPosX = otherCranesData.magnetPosX;
+            CONTEXT.data.otherMagnetPosY = otherCranesData.magnetPosY;
         });
-
-        //create and append the player number text to the 
-        var playerNumberText = document.createElement('a-entity');
-        playerNumberText.setAttribute('id', 'playerNumberText');
-        playerNumberText.setAttribute('position', '0 0.7 -1');
-        playerNumberText.setAttribute('text', 'value: Player ' + CONTEXT.data.craneToControl + '; color: white; align: center; width: 1.5');
-        CONTEXT.camera.appendChild(playerNumberText);
     },
 
     tick: function () {
@@ -157,7 +159,6 @@ AFRAME.registerComponent('crane-controller', {
                 //do nothing if the key pressed is not one of the above
                 break;
         }
-
         //update the crane on the server after the player releases a key
         socket.emit('updateCrane'+CONTEXT.data.craneToControl, CONTEXT.data);
     },
