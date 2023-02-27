@@ -30,12 +30,14 @@ io.on('connection', (socket) => {
 
     //if updateCrane2 event is received, broadcast it to all other clients
     socket.on('updateCrane2', (data) => {
-        socket.broadcast.emit('updateCrane2', data);
+        console.log("updateCrane2 event received");
+        socket.broadcast.emit('updateCrane2', data)
     });
     
     //if updateCrane1 event is received, broadcast it to all other clients
     socket.on('updateCrane1', (data) => {
-        socket.broadcast.emit('updateCrane1', data);
+        console.log("updateCrane1 event received");
+        socket.broadcast.emit('updateCrane1', data)
     });
 
     //if disconnect event is received, decrement the player counter and log the disconnection
@@ -64,6 +66,7 @@ io.on('connection', (socket2) => {
 
     socket2.on('disconnect', () => {
         playerCount--;
+        
         console.log("Player count: " + playerCount);
         console.log('P2 has disconnected');
     });
