@@ -72,138 +72,166 @@ AFRAME.registerComponent('crane-controller', {
             otherMagnet = document.querySelector('#crane-magnet'+(CONTEXT.data.craneToControl-1));
             otherCable = document.querySelector('#magnet-cable'+(CONTEXT.data.craneToControl-1));
             otherCraneNum = CONTEXT.data.craneToControl-1;
-            CONTEXT.data.rotation = 60;
-            CONTEXT.data.otherRotation = -120;
         }
 
         //animate the crane to the new rotation
-        crane.setAttribute('animation', {property: 'rotation', to: {x: 0, y: CONTEXT.data.rotation, z: 0}, dur: 10});
+        crane.setAttribute('animation', {
+            property: 'rotation',
+            to: {x: 0, y: CONTEXT.data.rotation, z: 0},
+            dur: 10
+        });
 
         //animate the magnet to the new position
-        magnet.setAttribute('animation', {property: 'position', to: {x: CONTEXT.data.magnetPosX, y: CONTEXT.data.magnetPosY, z: 0}, dur: 50});
+        magnet.setAttribute('animation', {
+            property: 'position', 
+            to: {x: CONTEXT.data.magnetPosX, y: CONTEXT.data.magnetPosY, z: 0}, 
+            dur: 50
+        });
 
         //update the length of the magnet cable
-        cable.setAttribute('line', {start: {x: 0, y: 0, z: 0}, end: {x: 0, y: 88 - CONTEXT.data.magnetPosY, z: 0}, color: 'black', opacity: 1});
+        cable.setAttribute('line', {
+            start: {x: 0, y: 0, z: 0}, 
+            end: {x: 0, y: 88 - CONTEXT.data.magnetPosY, z: 0}, 
+            color: 'black', 
+            opacity: 1
+        });
 
         //update the other crane's rotation
-        otherCrane.setAttribute('animation', {property: 'rotation', to: {x: 0, y: CONTEXT.data.otherRotation, z: 0}, dur: 10});
+        otherCrane.setAttribute('animation', {
+            property: 'rotation', 
+            to: {x: 0, y: CONTEXT.data.otherRotation, z: 0}, 
+            dur: 10
+        });
 
         //update the other crane's magnet position
-        otherMagnet.setAttribute('animation', {property: 'position', to: {x: CONTEXT.data.otherMagnetPosX, y: CONTEXT.data.otherMagnetPosY, z: 0}, dur: 50});
+        otherMagnet.setAttribute('animation', {
+            property: 'position', 
+            to: {x: CONTEXT.data.otherMagnetPosX, y: CONTEXT.data.otherMagnetPosY, z: 0}, 
+            dur: 50
+        });
 
         //update the other crane's magnet cable length
-        otherCable.setAttribute('line', {start: {x: 0, y: 0, z: 0}, end: {x: 0, y: 88 - CONTEXT.data.otherMagnetPosY, z: 0}, color: 'black', opacity: 1});
+        otherCable.setAttribute('line', {
+            start: {x: 0, y: 0, z: 0}, 
+            end: {x: 0, y: 88 - CONTEXT.data.otherMagnetPosY, z: 0}, 
+            color: 'black', 
+            opacity: 1
+        });
 
-        console.log("Crane " + CONTEXT.data.craneToControl + " rotation: " + CONTEXT.data.rotation);
+        //console.log("Crane " + CONTEXT.data.craneToControl + " rotation: " + CONTEXT.data.rotation);
     },
 
     onKeydown: function(evt) {
         const CONTEXT = this;
         //switch on the keycode, determine correct action and move crane accordingly
         if (CONTEXT.data.craneToControl === 1) {
-        switch(evt.keyCode) {
-            case 87: //W
-            if (CONTEXT.data.magnetPosX < 65) {
-                    CONTEXT.data.magnetPosX += 1;
-                }
-                break;
-            case 38: //UP
+            console.log("player1 changing positions");
+            switch(evt.keyCode) {
+                case 87: //W
                 if (CONTEXT.data.magnetPosX < 65) {
-                    CONTEXT.data.magnetPosX += 1;
-                }
-                break;
-            case 65: //A
-                if (CONTEXT.data.rotation < -75) {
-                    CONTEXT.data.rotation += 1;
-                }
-                break;
-            case 37: //LEFT
-                if (CONTEXT.data.rotation < -75) {
-                    CONTEXT.data.rotation += 1;
-                }
-                break;
-            case 83: //S
-                if (CONTEXT.data.magnetPosX > 25) {
-                    CONTEXT.data.magnetPosX -= 1;
-                }
-                break;
-            case 40: //DOWN
-                if (CONTEXT.data.magnetPosX > 25) {
-                    CONTEXT.data.magnetPosX -= 1;
-                }
-                break;
-            case 68: //D
-            if (CONTEXT.data.rotation > -210) {
-                CONTEXT.data.rotation -= 1;
-            }
-                break;
-            case 39: //RIGHT
+                        CONTEXT.data.magnetPosX += 1;
+                    }
+                    break;
+                case 38: //UP
+                    if (CONTEXT.data.magnetPosX < 65) {
+                        CONTEXT.data.magnetPosX += 1;
+                    }
+                    break;
+                case 65: //A
+                    if (CONTEXT.data.rotation < -75) {
+                        CONTEXT.data.rotation += 1;
+                    }
+                    break;
+                case 37: //LEFT
+                    if (CONTEXT.data.rotation < -75) {
+                        CONTEXT.data.rotation += 1;
+                    }
+                    break;
+                case 83: //S
+                    if (CONTEXT.data.magnetPosX > 25) {
+                        CONTEXT.data.magnetPosX -= 1;
+                    }
+                    break;
+                case 40: //DOWN
+                    if (CONTEXT.data.magnetPosX > 25) {
+                        CONTEXT.data.magnetPosX -= 1;
+                    }
+                    break;
+                case 68: //D
                 if (CONTEXT.data.rotation > -210) {
                     CONTEXT.data.rotation -= 1;
                 }
-                break;
-            case 32: //SPACE
-                //animate the magnet down to 44 and then back up to 82
-                CONTEXT.data.magnetPosY = 44;
-                break;
-            default:
-                //do nothing if the key pressed is not one of the above
-                break;
-        }
-    } else if (CONTEXT.data.craneToControl === 2) { //if this is player 2, invert the controls
-        switch(evt.keyCode) {
-            case 87: //W
-            if (CONTEXT.data.magnetPosX < 65) {
-                    CONTEXT.data.magnetPosX += 1;
-                }
-                break;
-            case 38: //UP
-                if (CONTEXT.data.magnetPosX < 65) {
-                    CONTEXT.data.magnetPosX += 1;
-                }
-                break;
-            case 65: //A
-                if (CONTEXT.data.rotation < 120) {
-                    CONTEXT.data.rotation += 1;
-                }
-                break;
-            case 37: //LEFT
-                if (CONTEXT.data.rotation < 120) {
-                    CONTEXT.data.rotation += 1;
-                }
-                break;
-            case 83: //S
-                if (CONTEXT.data.magnetPosX > 25) {
-                    CONTEXT.data.magnetPosX -= 1;
-                }
-                break;
-            case 40: //DOWN
-                if (CONTEXT.data.magnetPosX > 25) {
-                    CONTEXT.data.magnetPosX -= 1;
-                }
-                break;
-            case 68: //D
-            if (CONTEXT.data.rotation > -30) {
-                CONTEXT.data.rotation -= 1;
+                    break;
+                case 39: //RIGHT
+                    if (CONTEXT.data.rotation > -210) {
+                        CONTEXT.data.rotation -= 1;
+                    }
+                    break;
+                case 32: //SPACE
+                    //animate the magnet down to 44 and then back up to 82
+                    CONTEXT.data.magnetPosY = 44;
+                    break;
+                default:
+                    //do nothing if the key pressed is not one of the above
+                    break;
             }
-                break;
-            case 39: //RIGHT
+        }
+
+        if (CONTEXT.data.craneToControl === 2) { //if this is player 2, invert the controls
+            console.log("Player 2 changing positions");
+            switch(evt.keyCode) {
+                case 87: //W
+                if (CONTEXT.data.magnetPosX < 65) {
+                        CONTEXT.data.magnetPosX += 1;
+                    }
+                    break;
+                case 38: //UP
+                    if (CONTEXT.data.magnetPosX < 65) {
+                        CONTEXT.data.magnetPosX += 1;
+                    }
+                    break;
+                case 65: //A
+                    if (CONTEXT.data.rotation < 120) {
+                        CONTEXT.data.rotation += 1;
+                    }
+                    break;
+                case 37: //LEFT
+                    if (CONTEXT.data.rotation < 120) {
+                        CONTEXT.data.rotation += 1;
+                    }
+                    break;
+                case 83: //S
+                    if (CONTEXT.data.magnetPosX > 25) {
+                        CONTEXT.data.magnetPosX -= 1;
+                    }
+                    break;
+                case 40: //DOWN
+                    if (CONTEXT.data.magnetPosX > 25) {
+                        CONTEXT.data.magnetPosX -= 1;
+                    }
+                    break;
+                case 68: //D
                 if (CONTEXT.data.rotation > -30) {
                     CONTEXT.data.rotation -= 1;
                 }
-                break;
-            case 32: //SPACE
-                //animate the magnet down to 44 and then back up to 82
-                CONTEXT.data.magnetPosY = 44;
-                break;
-            default:
-                //do nothing if the key pressed is not one of the above
-                break;
+                    break;
+                case 39: //RIGHT
+                    if (CONTEXT.data.rotation > -30) {
+                        CONTEXT.data.rotation -= 1;
+                    }
+                    break;
+                case 32: //SPACE
+                    //animate the magnet down to 44 and then back up to 82
+                    CONTEXT.data.magnetPosY = 44;
+                    break;
+                default:
+                    //do nothing if the key pressed is not one of the above
+                    break;
+            }
         }
-    }
     },
 
-    //currently just a special case for the magnet so you can hold it down
+    //hold down magnet controls + update crane on server
     onKeyup: function(evt) {
         const CONTEXT = this;
         let socket = io();
