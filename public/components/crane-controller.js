@@ -80,10 +80,15 @@ AFRAME.registerComponent('crane-controller', {
             otherMagnet = document.querySelector('#crane-magnet'+(CONTEXT.data.craneToControl-1));
             otherCable = document.querySelector('#magnet-cable'+(CONTEXT.data.craneToControl-1));
             otherCraneNum = CONTEXT.data.craneToControl-1;
+            
             if (CONTEXT.data.doOnce === true) {
                 CONTEXT.data.rotation = 60;
                 CONTEXT.data.otherRotation = -120;
                 CONTEXT.data.doOnce = false;
+
+                //change the second player's camera position
+                CONTEXT.camera.setAttribute('position', '-0.75 1.2 1.2');
+                CONTEXT.camera.setAttribute('rotation', '0 0 0');
             }
         }
 
