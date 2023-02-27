@@ -28,6 +28,13 @@ io.on('connection', (socket) => {
     //send welcome event with player number to the client
     socket.emit('welcome', playerCount);
 
+
+    socket.on('updateCrane', (data) => {
+        console.log("updateCrane event received");
+        socket.broadcast.emit('updateCrane', data)
+    });
+
+    /*
     //if updateCrane2 event is received, broadcast it to all other clients
     socket.on('updateCrane2', (data) => {
         console.log("updateCrane2 event received");
@@ -38,7 +45,7 @@ io.on('connection', (socket) => {
     socket.on('updateCrane1', (data) => {
         console.log("updateCrane1 event received");
         socket.broadcast.emit('updateCrane1', data)
-    });
+    });*/
 
     //if disconnect event is received, decrement the player counter and log the disconnection
     socket.on('disconnect', () => {

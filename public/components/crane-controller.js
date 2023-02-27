@@ -11,7 +11,7 @@ AFRAME.registerComponent('crane-controller', {
         otherRotation: {type: 'number', default: 60}, //the rotation of the other crane
         otherMagnetPosX: {type: 'number', default: 65}, //the x position of the other magnet (relative, parented to the crane)
         otherMagnetPosY: {type: 'number', default: 80}, //the y position of the other magnet (relative, parented to the crane)
-        doOnce: {type: 'boolean', default: true}, //a boolean that is used to only run the code in the tick function once
+        doOnce: {type: 'boolean', default: true}, //a boolean that is used to only run specific code in the tick function once
     },
     init: function () {
         const CONTEXT = this;
@@ -48,11 +48,18 @@ AFRAME.registerComponent('crane-controller', {
             });
         }), 100; //wait 100ms before setting up the welcome event listener
 
-        //receive updateCrane event from the server, update the data of the crane
-        socket.on("updateCrane"+CONTEXT.data.craneToControl, function(otherCranesData) {
-            CONTEXT.data.otherRotation = otherCranesData.rotation;
-            CONTEXT.data.otherMagnetPosX = otherCranesData.magnetPosX;
-            CONTEXT.data.otherMagnetPosY = otherCranesData.magnetPosY;
+        socket.on('updateCrane', (data) => {
+            //update the other crane's position
+            if (data.craneToControl === 1 && CONTEXT.data.craneToControl === 2) {
+                CONTEXT.data.otherRotation = data.rotation;
+                CONTEXT.data.otherMagnetPosX = data.magnetPosX;
+                CONTEXT.data.otherMagnetPosY = data.magnetPosY;
+            }
+            if (data.craneToControl === 2 && CONTEXT.data.craneToControl === 1) {
+                CONTEXT.data.otherRotation = data.rotation;
+                CONTEXT.data.otherMagnetPosX = data.magnetPosX;
+                CONTEXT.data.otherMagnetPosY = data.magnetPosY;
+            }
         });
     },
 
@@ -251,7 +258,7 @@ AFRAME.registerComponent('crane-controller', {
                 break;
         }
         //update the crane on the server after the player releases a key
-        socket.emit('updateCrane'+CONTEXT.data.craneToControl, CONTEXT.data);
+        socket.emit('updateCrane', CONTEXT.data);
     },
 
     updateSchema: function (event) {      
