@@ -11,6 +11,7 @@ AFRAME.registerComponent('crane-controller', {
         otherRotation: {type: 'number', default: 60}, //the rotation of the other crane
         otherMagnetPosX: {type: 'number', default: 65}, //the x position of the other magnet (relative, parented to the crane)
         otherMagnetPosY: {type: 'number', default: 80}, //the y position of the other magnet (relative, parented to the crane)
+        doOnce: {type: 'boolean', default: true}, //a boolean that is used to only run the code in the tick function once
     },
     init: function () {
         const CONTEXT = this;
@@ -72,6 +73,11 @@ AFRAME.registerComponent('crane-controller', {
             otherMagnet = document.querySelector('#crane-magnet'+(CONTEXT.data.craneToControl-1));
             otherCable = document.querySelector('#magnet-cable'+(CONTEXT.data.craneToControl-1));
             otherCraneNum = CONTEXT.data.craneToControl-1;
+            if (CONTEXT.data.doOnce === true) {
+                CONTEXT.data.rotation = 60;
+                CONTEXT.data.otherRotation = -120;
+                CONTEXT.data.doOnce = false;
+            }
         }
 
         //animate the crane to the new rotation
