@@ -28,9 +28,7 @@ io.on('connection', (socket) => {
     //send welcome event with player number to the client
     socket.emit('welcome', playerCount);
 
-
     socket.on('updateCrane', (data) => {
-        console.log("updateCrane event received");
         socket.broadcast.emit('updateCrane', data)
     });
 
