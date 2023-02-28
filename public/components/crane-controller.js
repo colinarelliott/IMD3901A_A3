@@ -61,6 +61,12 @@ AFRAME.registerComponent('crane-controller', {
                 CONTEXT.data.otherMagnetPosY = data.magnetPosY;
             }
         });
+
+        setInterval(function() {
+            //update the crane's position to the server
+            CONTEXT.socket.emit('updateCrane', CONTEXT.data);
+        }, 50); //update the crane's position every 5ms
+
     },
 
     tick: function () {
@@ -249,7 +255,7 @@ AFRAME.registerComponent('crane-controller', {
         }
     },
 
-    //hold down magnet controls + update crane on server
+    //hold down magnet controls
     onKeyup: function(evt) {
         const CONTEXT = this;
         switch(evt.keyCode) { 
@@ -261,8 +267,6 @@ AFRAME.registerComponent('crane-controller', {
                 //do nothing if the key pressed is not one of the above
                 break;
         }
-        //update the crane on the server after the player releases a key
-        CONTEXT.socket.emit('updateCrane', CONTEXT.data);
     },
 
     updateSchema: function (event) {      
