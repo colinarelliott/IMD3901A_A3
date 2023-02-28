@@ -34,19 +34,6 @@ io.on('connection', (socket) => {
         socket.broadcast.emit('updateCrane', data)
     });
 
-    /*
-    //if updateCrane2 event is received, broadcast it to all other clients
-    socket.on('updateCrane2', (data) => {
-        console.log("updateCrane2 event received");
-        socket.broadcast.emit('updateCrane2', data)
-    });
-    
-    //if updateCrane1 event is received, broadcast it to all other clients
-    socket.on('updateCrane1', (data) => {
-        console.log("updateCrane1 event received");
-        socket.broadcast.emit('updateCrane1', data)
-    });*/
-
     //if disconnect event is received, decrement the player counter and log the disconnection
     socket.on('disconnect', () => {
         if (playerCount > 0) {
@@ -56,69 +43,6 @@ io.on('connection', (socket) => {
         }
     });
 });
-
-//old attempts below just in case I want to go back to them
-
- /* P2 Code
-io.on('connection', (socket2) => {
-    playerCount++;
-    socket2.join('p2');
-    console.log("Player count: " + playerCount);
-    console.log('P2 has connected');
-    socket2.emit('welcome', playerCount);
-
-    socket2.on('updateCrane1', (data) => {
-        socket2.broadcast.to('p1').emit('updateCrane1', data);
-    });
-
-    socket2.on('disconnect', () => {
-        playerCount--;
-        
-        console.log("Player count: " + playerCount);
-        console.log('P2 has disconnected');
-    });
-}); */
-
-/*
-//custom socket.io events
-io.on('connect', (socket) => {
-    playerCount++;
-    console.log("Player count: " + playerCount);
-    socket.emit('welcome', playerCount);
-
-    socket.on('magnetForward', (arg) => {
-        console.log(arg);
-    });
-    socket.on('magnetBackward', (arg) => {
-        console.log(arg);
-    });
-    socket.on('craneLeft', (arg) => {
-        console.log(arg);
-    });
-    socket.on('craneRight', (arg) => {
-        console.log(arg);
-    });
-    socket.on('magnetDown', (arg) => {
-        console.log(arg);
-    });
-    socket.on('magnetUp', (arg) => {
-        console.log(arg);
-    });
-
-    socket.on('updateCrane1', (data) => {
-        //socket.broadcast.emit('updateCrane1', data);
-    });
-
-    socket.on('updateCrane2', (data) => {
-        //socket.broadcast.emit('updateCrane2', data);
-    });
-
-    socket.on('disconnect', () => {
-        playerCount--;
-        console.log("Player count: " + playerCount);
-        console.log('A user has disconnected');
-    });
-});*/
 
 //END SOCKET.IO CODE
 
