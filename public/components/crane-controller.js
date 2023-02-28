@@ -19,23 +19,23 @@ AFRAME.registerComponent('crane-controller', {
         //bind the functions to the context of the component
         CONTEXT.onKeydown = CONTEXT.onKeydown.bind(CONTEXT); //this function will be executed on keydown
         CONTEXT.onKeyup = CONTEXT.onKeyup.bind(CONTEXT); //this function will be executed on keyup
- 
+        CONTEXT.socket = io(); //connect to the server
+
         window.addEventListener('keydown', CONTEXT.onKeydown); //add the keydown event listener
         window.addEventListener('keyup', CONTEXT.onKeyup); //add the keyup event listener
-        let socket = io(); //connect to the server
 
         //debug connect and disconnect logs
-        socket.on('connect', (userData) => {
+        CONTEXT.socket.on('connect', (userData) => {
             console.log("I have connected to the server!");
         });
         
-        socket.on('disconnect', () => {
+        CONTEXT.socket.on('disconnect', () => {
             console.log("I have disconnected from the server!");
         });
 
         //receive welcome event from the server with player number, set the craneToControl variable to the player number
         setTimeout( function() {
-            socket.on('welcome', (playerCount) => {
+            CONTEXT.socket.once('welcome', (playerCount) => {
                 console.log("You are player " + playerCount);
                 //create and append the player number text to the camera
                 var playerNumberText = document.createElement('a-entity');
@@ -48,7 +48,7 @@ AFRAME.registerComponent('crane-controller', {
             });
         }), 100; //wait 100ms before setting up the welcome event listener
 
-        socket.on('updateCrane', (data) => {
+        CONTEXT.socket.on('updateCrane', (data) => {
             //update the other crane's position
             if (data.craneToControl === 1 && CONTEXT.data.craneToControl === 2) {
                 CONTEXT.data.otherRotation = data.rotation;
@@ -252,7 +252,6 @@ AFRAME.registerComponent('crane-controller', {
     //hold down magnet controls + update crane on server
     onKeyup: function(evt) {
         const CONTEXT = this;
-        let socket = io();
         switch(evt.keyCode) { 
             case 32: //SPACE
                 //animate the magnet back up to 82
@@ -263,7 +262,7 @@ AFRAME.registerComponent('crane-controller', {
                 break;
         }
         //update the crane on the server after the player releases a key
-        socket.emit('updateCrane', CONTEXT.data);
+        CONTEXT.socket.emit('updateCrane', CONTEXT.data);
     },
 
     updateSchema: function (event) {      
