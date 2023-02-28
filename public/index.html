@@ -22,6 +22,7 @@
                 <a-asset id="scene-geometry-model" src="assets/models/scene.gltf"></a-asset>
                 <!--I custom made this crane-->
                 <a-asset id="crane-model" src="assets/models/crane.gltf"></a-asset>
+                <a-asset id="blue-container-model" src="assets/models/blue-container.gltf"></a-asset>
             </a-assets>
 
             <!--Physics ground plane-->
@@ -40,14 +41,6 @@
                 position="-0.78 0.25 0.32"
                 visible="false"
                 static-body
-            ></a-entity>
-
-            <a-entity
-                id="physics-cube"
-                geometry="primitive: box; width: 0.1; height: 0.1; depth: 0.1;"
-                position="-0.8 1 0.5"
-                material="color: #FF0000;"
-                dynamic-body="shape: box;"
             ></a-entity>
 
             <a-entity 
@@ -135,6 +128,15 @@
                     ></a-entity>
                 </a-entity>
             </a-entity>
+
+            <a-entity 
+                id="blue-container"
+                gltf-model="#blue-container-model"
+                position="-0.65 0.8 0.5"
+                scale="0.04 0.04 0.04"
+                shadow
+                dynamic-body="shape: box;"
+            ></a-entity>
 
             <!--Environment-->
             <a-entity 
