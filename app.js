@@ -32,11 +32,12 @@ io.on('connection', (socket) => {
         socket.broadcast.emit('updateCrane', data)
     });
 
+    /*
     socket.on('pickupContainer', (data) => {
         socket.broadcast.emit('pickupContainer', data);
         console.log('pickupContainer event received at server');
 
-    });
+    });*/
 
     //if disconnect event is received, decrement the player counter and log the disconnection
     socket.on('disconnect', () => {
