@@ -1,7 +1,6 @@
 // a component that allows the crane magnets to pickup the nearest container when dropped.
 
 AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controller component
-    dependencies: ['crane-controller'],
     schema: {
         //list of all containers
         containers: {type: 'selectorAll', default: '.shippingContainer'}
