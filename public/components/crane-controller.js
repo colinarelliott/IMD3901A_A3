@@ -23,7 +23,6 @@ AFRAME.registerComponent('crane-controller', {
 
         window.addEventListener('keydown', CONTEXT.onKeydown); //add the keydown event listener
         window.addEventListener('keyup', CONTEXT.onKeyup); //add the keyup event listener
-
         //debug connect and disconnect logs
         CONTEXT.socket.on('connect', (userData) => {
             console.log("I have connected to the server!");
@@ -272,6 +271,18 @@ AFRAME.registerComponent('crane-controller', {
                 //do nothing if the key pressed is not one of the above
                 break;
         }
+    },
+
+    //pickup container function
+    pickupContainer: function(magnetNumber, containerToPickup) {
+        const CONTEXT = this;
+        let container = document.querySelector('#' + containerToPickup);
+        let magnet = document.querySelector('#magnet' + magnetNumber);
+        magnet.append(container);
+        //set the container's position to 0,0,0
+        container.setAttribute('position', {x: 0, y: 0, z: 0});
+        //set the container's rotation to 0,0,0
+        container.setAttribute('rotation', {x: 0, y: 0, z: 0});
     },
 
     updateSchema: function (event) {      
