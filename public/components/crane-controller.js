@@ -255,13 +255,18 @@ AFRAME.registerComponent('crane-controller', {
         }
     },
 
-    //hold down magnet controls
+    //hold down magnet controls & emit pickup-container event
     onKeyup: function(evt) {
         const CONTEXT = this;
         switch(evt.keyCode) { 
             case 32: //SPACE
                 //animate the magnet back up to 82
                 CONTEXT.data.magnetPosY = 82;
+                //emit the pickup-container event
+                CONTEXT.socket.emit("pickupContainer", {
+                    craneToControl: CONTEXT.data.craneToControl
+                });
+
                 break;
             default:
                 //do nothing if the key pressed is not one of the above
