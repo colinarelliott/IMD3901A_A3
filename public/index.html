@@ -11,11 +11,12 @@
         <script src="/socket.io/socket.io.js"></script>
 
         <!--Custom Components-->
-        <script src="components/crane-controller.js"></script>
+        <script src="components/gameManager.js"></script>
+        <script src="components/craneController.js"></script>
         <script src="components/pickupContainer.js"></script>
     </head>
     <body>
-        <a-scene physics="debug: true;" >
+        <a-scene physics="debug: true;" gameManager>
             <a-assets>
                 <!--Assets-->
                 <!--This work is based on "Progetto 1" (https://sketchfab.com/3d-models/progetto-1-3b571cedfed544c8afa8d5a6a258cd69) by c.capuano2020d (https://sketchfab.com/c.capuano2020d) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)-->
@@ -86,7 +87,7 @@
 
             <!--Cranes-->
             <a-entity id="crane-controller" 
-                crane-controller
+                craneController
                 pickupContainer
             ></a-entity>
 
