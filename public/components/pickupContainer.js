@@ -36,7 +36,9 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
                 //append distances to a list
                 distances.push(Math.sqrt(Math.pow((containerPosition.x - cranePosition.x), 2) + Math.pow((containerPosition.z - cranePosition.z), 2)));
             }
-            let containerToPickup = CONTEXT.data.containers[distances.indexOf(Math.min(distances))].getAttribute('id'); //get the index of the minimum distance
+            let containerToPickup = CONTEXT.data.containers[
+                distances.indexOf(Math.min(distances)) //get the index of the minimum distance
+            ].getAttribute('id');  //get the id of the container with the minimum distance
 
             //END CONTAINER PICKING ALGORITHM
 
