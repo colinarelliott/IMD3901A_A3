@@ -4,7 +4,7 @@
 
 AFRAME.registerComponent('crane-controller', {
     //required components
-    dependencies: ['pickupContainer'],
+    dependencies: ['pickupContainer'], //the pickupContainer component is required for this component to work
     schema: {
         craneToControl: {type: 'number', default: 1}, //the crane that this player controls
         rotation: {type: 'number', default: -120}, //the rotation of the crane
@@ -110,7 +110,7 @@ AFRAME.registerComponent('crane-controller', {
         magnet.setAttribute('animation', {
             property: 'position', 
             to: {x: CONTEXT.data.magnetPosX, y: CONTEXT.data.magnetPosY, z: 0}, 
-            dur: 50
+            dur: 100
         });
 
         //update the length of the magnet cable
@@ -132,7 +132,7 @@ AFRAME.registerComponent('crane-controller', {
         otherMagnet.setAttribute('animation', {
             property: 'position', 
             to: {x: CONTEXT.data.otherMagnetPosX, y: CONTEXT.data.otherMagnetPosY, z: 0}, 
-            dur: 50
+            dur: 100
         });
 
         //update the other crane's magnet cable length
@@ -154,12 +154,12 @@ AFRAME.registerComponent('crane-controller', {
             switch(evt.keyCode) {
                 case 87: //W
                 if (CONTEXT.data.magnetPosX < 65) {
-                        CONTEXT.data.magnetPosX += 1;
+                        CONTEXT.data.magnetPosX += 2;
                     }
                     break;
                 case 38: //UP
                     if (CONTEXT.data.magnetPosX < 65) {
-                        CONTEXT.data.magnetPosX += 1;
+                        CONTEXT.data.magnetPosX += 2;
                     }
                     break;
                 case 65: //A
@@ -174,12 +174,12 @@ AFRAME.registerComponent('crane-controller', {
                     break;
                 case 83: //S
                     if (CONTEXT.data.magnetPosX > 25) {
-                        CONTEXT.data.magnetPosX -= 1;
+                        CONTEXT.data.magnetPosX -= 2;
                     }
                     break;
                 case 40: //DOWN
                     if (CONTEXT.data.magnetPosX > 25) {
-                        CONTEXT.data.magnetPosX -= 1;
+                        CONTEXT.data.magnetPosX -= 2;
                     }
                     break;
                 case 68: //D
