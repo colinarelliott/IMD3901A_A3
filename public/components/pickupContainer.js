@@ -63,7 +63,6 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
 
     putdown: function () {
         const CONTEXT = this;
-        CONTEXT.data.pickupAllowed = true;
         const container = document.querySelector('.heldContainer');
         //check if there is a container to put down and if the magnet is in the right position
         //gameManager will have a schema variable that will be set to true when the crane is in the right position
@@ -74,6 +73,8 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
             container.parentNode.removeChild(container);
             //document.querySelector('#container-holder').appendChild(copy); //put the container into container holder which populates the container list in the game manager
         }
+        CONTEXT.data.pickupAllowed = true;
+        
     },
 
     tick: function () {
