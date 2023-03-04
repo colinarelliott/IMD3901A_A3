@@ -2,7 +2,7 @@
 //and, using socket.io, sends data about the cranes position to the server, which then sends it to the other player
 //receives the data from the other player and updates the other crane's position
 
-AFRAME.registerComponent('crane-controller', {
+AFRAME.registerComponent('craneController', {
     //required components
     dependencies: ['pickupContainer'], //the pickupContainer component is required for this component to work
     schema: {
