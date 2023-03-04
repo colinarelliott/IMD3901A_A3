@@ -103,7 +103,7 @@ AFRAME.registerComponent('crane-controller', {
         crane.setAttribute('animation', {
             property: 'rotation',
             to: {x: 0, y: CONTEXT.data.rotation, z: 0},
-            dur: 10
+            dur: 50
         });
 
         //animate the magnet to the new position
@@ -125,7 +125,7 @@ AFRAME.registerComponent('crane-controller', {
         otherCrane.setAttribute('animation', {
             property: 'rotation', 
             to: {x: 0, y: CONTEXT.data.otherRotation, z: 0}, 
-            dur: 10
+            dur: 50
         });
 
         //update the other crane's magnet position
@@ -164,12 +164,12 @@ AFRAME.registerComponent('crane-controller', {
                     break;
                 case 65: //A
                     if (CONTEXT.data.rotation < -75) {
-                        CONTEXT.data.rotation += 1;
+                        CONTEXT.data.rotation += 2;
                     }
                     break;
                 case 37: //LEFT
                     if (CONTEXT.data.rotation < -75) {
-                        CONTEXT.data.rotation += 1;
+                        CONTEXT.data.rotation += 2;
                     }
                     break;
                 case 83: //S
@@ -184,12 +184,12 @@ AFRAME.registerComponent('crane-controller', {
                     break;
                 case 68: //D
                 if (CONTEXT.data.rotation > -210) {
-                    CONTEXT.data.rotation -= 1;
+                    CONTEXT.data.rotation -= 2;
                 }
                     break;
                 case 39: //RIGHT
                     if (CONTEXT.data.rotation > -210) {
-                        CONTEXT.data.rotation -= 1;
+                        CONTEXT.data.rotation -= 2;
                     }
                     break;
                 case 32: //SPACE

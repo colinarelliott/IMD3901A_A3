@@ -54,7 +54,7 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
                 copy.setAttribute('scale', {x: 5, y: 5, z: 5});
                 copy.setAttribute('class', ''); //remove class so it doesn't get picked up again
                 CONTEXT.data.pickupAllowed = false;
-            }, 50);
+            }, 10);
         }
     },
 
