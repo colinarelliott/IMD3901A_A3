@@ -259,49 +259,18 @@ AFRAME.registerComponent('crane-controller', {
     //hold down magnet controls & emit pickup-container event
     onKeyup: function(evt) {
         const CONTEXT = this;
-        const craneController = document.querySelector('#crane-controller');
+        const pickupContainer = document.querySelector('[pickupContainer]').components.pickupContainer;
         switch(evt.keyCode) { 
             case 32: //SPACE
                 //animate the magnet back up to 82
                 CONTEXT.data.magnetPosY = 82;
                 //call pickupContainer in pickup-container.js
-                CONTEXT.components.pickupContainer.pickup(CONTEXT.data);
+                pickupContainer.pickup(CONTEXT.data);
                 break;
             default:
                 //do nothing if the key pressed is not one of the above
                 break;
         }
-    },
-
-    onPickupContainer: function (eventData) {
-        const CONTEXT = this;
-        console.log("pickupContainer function called");
-        //refresh container list
-        CONTEXT.data.containers = document.querySelectorAll('.shippingContainer');
-        //add a list for the distances between the crane and the containers
-        let distances = [];
-        //set the magnet number
-        let magnetNumber = eventData.craneToControl;
-        console.log(magnetNumber);
-        console.log('pickupContainer event received ' + magnetNumber);
-        //get the crane controller component and reparent the closest container to the magnet
-
-        let crane = document.querySelector('#crane' + magnetNumber);
-        let cranePosition = crane.getAttribute('position');
-        for (i = 0; i < CONTEXT.data.containers.length; i++) { //measure each distance between the containers and the crane
-            let container = CONTEXT.data.containers[i];
-            let containerPosition = container.getAttribute('position');
-            //append distances to a list
-            distances.push(Math.sqrt(Math.pow((containerPosition.x - cranePosition.x), 2) + Math.pow((containerPosition.z - cranePosition.z), 2)));
-        }
-        let containerToPickup = CONTEXT.data.containers[distances.indexOf(Math.min(distances))].getAttribute('id'); //get the index of the minimum distance
-        let container = document.querySelector('#' + containerToPickup);
-        let magnet = document.querySelector('#magnet' + magnetNumber);
-        magnet.append(container);
-        //set the container's position to 0,0,0
-        container.setAttribute('position', {x: 0, y: 0, z: 0});
-        //set the container's rotation to 0,0,0
-        container.setAttribute('rotation', {x: 0, y: 0, z: 0});
     },
 
     updateSchema: function (event) {      

@@ -3,7 +3,8 @@
 AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controller component
     schema: {
         //list of all containers
-        containers: {type: 'selectorAll', default: '.shippingContainer'}
+        containers: {type: 'selectorAll', default: '.shippingContainer'},
+        pickupAllowed: {type: 'boolean', default: true}
     },
     init: function () {
         const CONTEXT = this;
@@ -19,12 +20,13 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
         let distances = [];
         //set the magnet number
         let magnetNumber = data.craneToControl;
-        console.log(magnetNumber);
         console.log('pickupContainer event received ' + magnetNumber);
         //get the crane controller component and reparent the closest container to the magnet
 
+        //CONTAINER PICKING ALGORITHM
         let crane = document.querySelector('#crane' + magnetNumber);
         let cranePosition = crane.getAttribute('position');
+        //loop through all containers and measure the distance between the crane and the container
         for (i = 0; i < CONTEXT.data.containers.length; i++) { //measure each distance between the containers and the crane
             let container = CONTEXT.data.containers[i];
             let containerPosition = container.getAttribute('position');
@@ -32,13 +34,30 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
             distances.push(Math.sqrt(Math.pow((containerPosition.x - cranePosition.x), 2) + Math.pow((containerPosition.z - cranePosition.z), 2)));
         }
         let containerToPickup = CONTEXT.data.containers[distances.indexOf(Math.min(distances))].getAttribute('id'); //get the index of the minimum distance
+
+        //END CONTAINER PICKING ALGORITHM
+
+        console.log("Pickup executed: |" +magnetNumber+"|"+containerToPickup+"|");
         let container = document.querySelector('#' + containerToPickup);
-        let magnet = document.querySelector('#magnet' + magnetNumber);
-        magnet.append(container);
-        //set the container's position to 0,0,0
-        container.setAttribute('position', {x: 0, y: 0, z: 0});
-        //set the container's rotation to 0,0,0
-        container.setAttribute('rotation', {x: 0, y: 0, z: 0});
+        let magnet = document.querySelector('#crane-magnet' + magnetNumber);
+        let copy = container.cloneNode(true);
+        //parent the copy to the magnet
+        magnet.appendChild(copy);
+        //remove the original container
+        container.parentNode.removeChild(container);
+        
+        setTimeout(function () { //reset the copy's position, rotation, and scale
+            copy.setAttribute('position', {x: 0, y: -14, z: 0});
+            copy.setAttribute('rotation', {x: 0, y: 0, z: 0});
+            copy.setAttribute('scale', {x: 5, y: 5, z: 5});
+            copy.setAttribute('class', ''); //remove class so it doesn't get picked up again
+            CONTEXT.data.pickupAllowed = false;
+        }, 50);
+
+        setTimeout(function () {
+            //remove the container after 500ms
+            copy.parentNode.removeChild(copy);
+        }, 1000);
     },
 
     tick: function () {
