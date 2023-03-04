@@ -12,9 +12,9 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
     },
 
     pickup: function (data) {
+        const CONTEXT = this;
         //check if the pickup is allowed
         if (CONTEXT.data.pickupAllowed === true) {
-            const CONTEXT = this;
             console.log("pickupContainer function called");
             //refresh container list
             CONTEXT.data.containers = document.querySelectorAll('.shippingContainer');
