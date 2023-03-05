@@ -14,9 +14,8 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
 
     pickup: function (data) {
         const CONTEXT = this;
-        const gameManager = document.querySelector('#gameManager').getAttribute('gameManager'); //get the gameManager component
-        console.log(gameManager);
         const craneController = document.querySelector('[crane-controller]').components['crane-controller']; //get the crane-controller component
+        const gameManager = document.querySelector('[gameManager]').components; //get the gameManager component
         //check if the pickup is allowed
         if (CONTEXT.data.pickupAllowed === true) {
             console.log("pickupContainer function called");
@@ -62,15 +61,12 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
             }, 10);
         } else {
             if (craneController.data.craneToControl === 1) {
-                if (gameManager.data.shipDropoff1 === true) {
-                    CONTEXT.putdown();
-                }
+                //need to make this conditional on gameManager schema variables but I couldn't seem to reference them
+                CONTEXT.putdown();
             }
 
             if (craneController.data.craneToControl === 2) {
-                if (gameManager.data.shipDropoff2 === true) {
-                    CONTEXT.putdown();
-                }
+                CONTEXT.putdown();
             }
         }
     },
@@ -78,6 +74,7 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
     putdown: function () {
         const CONTEXT = this;
         let container = document.querySelector('.heldContainer');
+        console.log("Putdown executed: |" + container.parentNode.getAttribute('id') + "|" + container.getAttribute('id') + "|");
         if (container !== null) {
             container.parentNode.removeChild(container);
             CONTEXT.data.pickupAllowed = true;
