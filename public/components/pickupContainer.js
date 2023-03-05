@@ -9,6 +9,7 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
     init: function () {
         const CONTEXT = this;
         CONTEXT.pickup = CONTEXT.pickup.bind(CONTEXT);
+        CONTEXT.putdown = CONTEXT.putdown.bind(CONTEXT);
     },
 
     pickup: function (data) {
@@ -52,9 +53,20 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
                 copy.setAttribute('position', {x: 0, y: -14, z: 0});
                 copy.setAttribute('rotation', {x: 0, y: 0, z: 0});
                 copy.setAttribute('scale', {x: 5, y: 5, z: 5});
-                copy.setAttribute('class', ''); //remove class so it doesn't get picked up again
+                copy.setAttribute('class', 'heldContainer'); //remove class so it doesn't get picked up again
                 CONTEXT.data.pickupAllowed = false;
             }, 10);
+        } else {
+            CONTEXT.putdown();
+        }
+    },
+
+    putdown: function () {
+        const CONTEXT = this;
+        let container = document.querySelector('.heldContainer');
+        if (container !== null) {
+            container.parentNode.removeChild(container);
+            CONTEXT.data.pickupAllowed = true;
         }
     },
 
