@@ -9,7 +9,6 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
     init: function () {
         const CONTEXT = this;
         CONTEXT.pickup = CONTEXT.pickup.bind(CONTEXT);
-        CONTEXT.putdown = CONTEXT.putdown.bind(CONTEXT);
     },
 
     pickup: function (data) {
@@ -36,9 +35,7 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
                 //append distances to a list
                 distances.push(Math.sqrt(Math.pow((containerPosition.x - cranePosition.x), 2) + Math.pow((containerPosition.z - cranePosition.z), 2)));
             }
-            let containerToPickup = CONTEXT.data.containers[
-                distances.indexOf(Math.min(distances)) //get the index of the minimum distance
-            ].getAttribute('id');  //get the id of the container with the minimum distance
+            let containerToPickup = CONTEXT.data.containers[distances.indexOf(Math.min(distances))].getAttribute('id'); //get the index of the minimum distance
 
             //END CONTAINER PICKING ALGORITHM
 
@@ -55,28 +52,10 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
                 copy.setAttribute('position', {x: 0, y: -14, z: 0});
                 copy.setAttribute('rotation', {x: 0, y: 0, z: 0});
                 copy.setAttribute('scale', {x: 5, y: 5, z: 5});
-                copy.setAttribute('class', 'heldContainer'); //remove class so it doesn't get picked up again
+                copy.setAttribute('class', ''); //remove class so it doesn't get picked up again
                 CONTEXT.data.pickupAllowed = false;
             }, 10);
-        } else {
-            CONTEXT.putdown();
         }
-    },
-
-    putdown: function () {
-        const CONTEXT = this;
-        const container = document.querySelector('.heldContainer');
-        //check if there is a container to put down and if the magnet is in the right position
-        //gameManager will have a schema variable that will be set to true when the crane is in the right position
-        //the position allowed will depend on the game type
-
-        if (container !== null) {
-            let copy = container.cloneNode(true);
-            container.parentNode.removeChild(container);
-            //document.querySelector('#container-holder').appendChild(copy); //put the container into container holder which populates the container list in the game manager
-        }
-        CONTEXT.data.pickupAllowed = true;
-        
     },
 
     tick: function () {
