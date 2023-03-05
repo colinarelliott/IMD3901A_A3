@@ -1,5 +1,6 @@
 AFRAME.registerComponent('gameManager', { 
     schema: {
+        gameStarted: {type: 'boolean', default: false},
         gameType: {type: 'string', oneOf: 'collaborative, competitive', default: 'collaborative'},
         shipDropoffRotation1: {type: 'vec2', default: {x: -210, y: -180}}, //less than is valid
         shipDropoffRotation2: {type: 'vec2', default: {x: -30, y: 0}}, //less than is valid
@@ -12,7 +13,16 @@ AFRAME.registerComponent('gameManager', {
         CONTEXT.competitiveInit = CONTEXT.competitiveInit.bind(CONTEXT);
 
         //create a UI that prompts the user to choose between collaborative and competitive gamemodes
-        
+        /*
+        const gameTypeUI = document.createElement('a-entity');
+        gameTypeUI.setAttribute('id', 'gameTypeUI');
+        gameTypeUI.setAttribute('position', {x: 0, y: 0, z: 0});
+        gameTypeUI.setAttribute('rotation', {x: 0, y: 0, z: 0});
+        gameTypeUI.setAttribute('scale', {x: 1, y: 1, z: 1});
+        gameTypeUI.setAttribute('geometry', {primitive: 'plane', width: 1, height: 1});
+        gameTypeUI.setAttribute('material', {color: '#000000', opacity: 0.5});
+        gameTypeUI.setAttribute('text', {value: 'Choose a gamemode', align: 'center', width: 1, color: '#ffffff'});
+        CONTEXT.el.appendChild(gameTypeUI);*/
 
         if (CONTEXT.data.gameType === 'collaborative') {
             CONTEXT.collaborativeInit();
