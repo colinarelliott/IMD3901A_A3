@@ -41,6 +41,7 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
             //END CONTAINER PICKING ALGORITHM
 
             console.log("Pickup executed: |" +magnetNumber+"|"+containerToPickup+"|");
+            //EMIT AN EVENT HERE TO SHOW THAT THE CONTAINER WAS PICKED UP TO THE SERVER
             let container = document.querySelector('#' + containerToPickup);
             let magnet = document.querySelector('#crane-magnet' + magnetNumber);
             let copy = container.cloneNode(true);
