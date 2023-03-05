@@ -1,6 +1,10 @@
 AFRAME.registerComponent('gameManager', { 
     schema: {
         gameType: {type: 'string', oneOf: 'collaborative, competitive', default: 'collaborative'},
+        shipDropoffRotation1: {type: 'number', default: '-180'}, //less than is valid
+        shipDropoffRotation2: {type: 'number', default: '0'}, //less than is valid
+        ship1Dropoff: {type: 'boolean', default: false},
+        ship2Dropoff: {type: 'boolean', default: false},
     },
     init: function () {
         const CONTEXT = this;
@@ -23,5 +27,9 @@ AFRAME.registerComponent('gameManager', {
     },
 
     competitiveInit: function () {
+    },
+
+    tick: function () {
+        const CONTEXT = this;
     }
 });
