@@ -14,6 +14,9 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
 
     pickup: function (data) {
         const CONTEXT = this;
+        const gameManager = document.querySelector('#gameManager').getAttribute('gameManager'); //get the gameManager component
+        console.log(gameManager);
+        const craneController = document.querySelector('[crane-controller]').components['crane-controller']; //get the crane-controller component
         //check if the pickup is allowed
         if (CONTEXT.data.pickupAllowed === true) {
             console.log("pickupContainer function called");
@@ -58,7 +61,17 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
                 CONTEXT.data.pickupAllowed = false;
             }, 10);
         } else {
-            CONTEXT.putdown();
+            if (craneController.data.craneToControl === 1) {
+                if (gameManager.data.shipDropoff1 === true) {
+                    CONTEXT.putdown();
+                }
+            }
+
+            if (craneController.data.craneToControl === 2) {
+                if (gameManager.data.shipDropoff2 === true) {
+                    CONTEXT.putdown();
+                }
+            }
         }
     },
 

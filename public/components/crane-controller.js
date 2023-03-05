@@ -264,7 +264,7 @@ AFRAME.registerComponent('crane-controller', {
             case 32: //SPACE
                 //animate the magnet back up to 82
                 CONTEXT.data.magnetPosY = 82;
-                //call pickupContainer in pickup-container.js
+                //call pickupContainer in pickupContainer.js
                 pickupContainer.pickup(CONTEXT.data);
                 break;
             default:

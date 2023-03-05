@@ -11,12 +11,12 @@
         <script src="/socket.io/socket.io.js"></script>
 
         <!--Custom Components-->
+        <script src="components/gameManager.js"></script>
         <script src="components/crane-controller.js"></script>
         <script src="components/pickupContainer.js"></script>
-        <script src="components/gameManager.js"></script>
     </head>
     <body>
-        <a-scene physics="debug: true;" gameManager>
+        <a-scene id="scene" physics="debug: true;">
             <a-assets>
                 <!--Assets-->
                 <!--This work is based on "Progetto 1" (https://sketchfab.com/3d-models/progetto-1-3b571cedfed544c8afa8d5a6a258cd69) by c.capuano2020d (https://sketchfab.com/c.capuano2020d) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)-->
@@ -26,6 +26,8 @@
                 <!--This work is based on "Shipping containers" (https://sketchfab.com/3d-models/shipping-containers-cc3f7136710f4905905eae1d10ac50b7) by Mateusz Woliński (https://sketchfab.com/jeandiz) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)-->
                 <a-asset id="blue-container-model" src="assets/models/blue-container.gltf"></a-asset>
             </a-assets>
+
+            <a-entity id="gameManager" gameManager="shipDropoff1: false; shipDropoff2: false;"></a-entity>
 
             <!--Physics ground plane-->
             <a-entity
