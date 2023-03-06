@@ -25,24 +25,40 @@ io.on('connection', (socket) => {
         console.log("Player count: " + playerCount);
         console.log('P' + playerCount + ' has connected');
     }
+
+    //BEGIN CUSTOM EVENTS
+
     //send welcome event with player number to the client
+    //WELCOME EVENT
     socket.emit('welcome', playerCount);
 
+    //UPDATE CRANE EVENT
     socket.on('updateCrane', (data) => {
         socket.broadcast.emit('updateCrane', data)
     });
 
+    //PICKUP CONTAINER EVENT
     socket.on('pickupContainer', (data) => {
         socket.broadcast.emit('pickupContainer', data);
         console.log('pickupContainer event received at server');
         console.log(data);
     });
 
+    //PUTDOWN CONTAINER EVENT
     socket.on('putdownContainer', (data) => {
         socket.broadcast.emit('putdownContainer', data);
         console.log('putdownContainer event received at server');
         console.log(data);
     });
+
+    //UPDATE CONTAINER COUNT EVENT
+    socket.on('updateContainerCount', (data) => {
+        socket.broadcast.emit('updateContainerCount', data);
+        console.log('updateContainerCount event received at server');
+        console.log(data);
+    });
+
+    //END CUSTOM EVENTS
 
     //if disconnect event is received, decrement the player counter and log the disconnection
     socket.on('disconnect', () => {

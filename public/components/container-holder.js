@@ -9,9 +9,13 @@ AFRAME.registerComponent('container-holder', {
         CONTEXT.addContainer = CONTEXT.addContainer.bind(CONTEXT);
         CONTEXT.removeContainer = CONTEXT.removeContainer.bind(CONTEXT);
         CONTEXT.updateServer = CONTEXT.updateServer.bind(CONTEXT);
-        CONTEXT.el.addEventListener('addContainer', CONTEXT.addContainer);
-        CONTEXT.el.addEventListener('removeContainer', CONTEXT.removeContainer);
-        CONTEXT.el.addEventListener('updateServer', CONTEXT.updateServer);
+
+        //update the containerCount across all clients for this cargo ship
+        CONTEXT.el.addEventListener('updateContainerCount', function (event) {
+            if (event.detail.cargoShipId === CONTEXT.el.id) {
+                CONTEXT.data.containerCount = event.detail.containerCount;
+            }
+        });
 
         setInterval(CONTEXT.updateServer, 100);
     },
@@ -27,6 +31,16 @@ AFRAME.registerComponent('container-holder', {
             //set the position of the containers on the ship
             children[i].setAttribute('position', {x: 0, y: 0.5, z: 0});
         }
+    },
+
+    updateServer: function () {
+        const CONTEXT = this;
+        const craneController = document.querySelector('[crane-controller]').components['crane-controller'];
+        let containerCount = CONTEXT.data.containerCount;
+        craneController.socket.emit('updateContainerCount', {
+            containerCount: containerCount,
+            cargoShipId: CONTEXT.el.id
+        });
     },
 
     addContainer: function (container) {
