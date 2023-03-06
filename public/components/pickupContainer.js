@@ -4,6 +4,7 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
     schema: {
         //list of all containers
         containers: {type: 'selectorAll', default: '.shippingContainer'},
+        cargoShips: {type: 'selectorAll', default: '.cargoShip'},
         pickupAllowed: {type: 'boolean', default: true}
     },
     init: function () {
@@ -16,7 +17,6 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
     pickup: function (data) {
         const CONTEXT = this;
         const craneController = document.querySelector('[crane-controller]').components['crane-controller']; //get the crane-controller component
-        const gameManager = document.querySelector('[game-manager]').components; //get the gameManager component
         //check if the pickup is allowed
         if (CONTEXT.data.pickupAllowed === true) {
             console.log("pickupContainer function called");
@@ -75,11 +75,54 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
                 console.log("No containers to pickup");
             }
         } else {
+            //get all cargo ships
+            const gameManager = document.querySelector('#gameManager').components["game-manager"]; //get the gameManager component
+            CONTEXT.cargoShips = document.querySelectorAll('.cargoShip');
+            //find the container that is currently held
             let containerToPutdown = document.querySelector('.heldContainer').getAttribute('id');
+            
+            //put the container down on the nearest cargo ship
+            if (gameManager.data.gameType === "competitive") {
+                //find the nearest cargo ship
+                let crane = document.querySelector('#crane' + data.craneToControl);
+                let cranePosition = crane.getAttribute('position');
+                let distancesCargo = [];
+                for (i = 0; i < CONTEXT.cargoShips.length; i++) {
+                    let cargoShip = CONTEXT.cargoShips[i];
+                    let cargoShipPosition = cargoShip.getAttribute('position');
+                    //append distances to a list
+                    distancesCargo.push(Math.sqrt(Math.pow((cargoShipPosition.x - cranePosition.x), 2) + Math.pow((cargoShipPosition.z - cranePosition.z), 2)));
+                }
+
+                let minDistance = Math.min.apply(Math, distancesCargo); //get the minimum distance 
+                let indexOfMinDistance = distances.indexOf(minDistance); //get the index of the minimum distance
+                let cargoShipToTarget = CONTEXT.cargoShips[indexOfMinDistance]; //get the container that is closest to the crane
+                let cargoShipID = cargoShipToTarget.getAttribute('id'); //get the id of the container to pickup
+                
+                craneController.putdownContainerEvent({
+                    containerID: containerToPutdown,
+                    craneNum: craneController.data.craneToControl,
+                    cargoShipID: cargoShipID
+                }); //trigger the putdownContainerEvent in the crane-controller component
+            }
+
+            //if the game is collaborative, put container down on cargo ship C
+            if (gameManager.data.gameType === "collaborative") { 
+                const CargoShipC = document.querySelector('#cargoShipC');
+                let cargoShipID = CargoShipC.getAttribute('id');
+
+                craneController.putdownContainerEvent({
+                    containerID: containerToPutdown,
+                    craneNum: craneController.data.craneToControl,
+                    cargoShipID: cargoShipID,
+                }); //trigger the putdownContainerEvent in the crane-controller component
+            }
+
+            /*
             craneController.putdownContainerEvent({
                 containerID: containerToPutdown,
                 craneNum: craneController.data.craneToControl
-            }); //trigger the putdownContainerEvent in the crane-controller component
+            }); //trigger the putdownContainerEvent in the crane-controller component */
 
             if (craneController.data.craneToControl === 1) {
                 //need to make this conditional on gameManager schema variables but I couldn't seem to reference them
@@ -120,22 +163,37 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
 
     },
 
-    putdown: function () {
+    putdown: function (data) {
         const CONTEXT = this;
+        const gameManager = document.querySelector('#gameManager').components["game-manager"]; //get the gameManager component
         let container = document.querySelector('.heldContainer');
-        console.log("Putdown executed: |" + container.parentNode.getAttribute('id') + "|" + container.getAttribute('id') + "|");
-        if (container !== null) {
-            container.parentNode.removeChild(container);
-            CONTEXT.data.pickupAllowed = true;
+
+        if (gameManager.data.gameType === "collaborative") {
+
+            let cargoShipToTarget = document.querySelector('#cargoShipC'); //STATIC to COLLABORATIVE MODE for now
+            console.log("Putdown executed: |" + container.parentNode.getAttribute('id') + "|" + container.getAttribute('id') + "|");
+            if (container !== null) {
+                cargoShipToTarget.components["container-holder"].addContainer(container);
+                container.parentNode.removeChild(container);
+                CONTEXT.data.pickupAllowed = true;
+            }
+        }
+
+        if (gameManager.data.gameType === "competitive") { 
         }
     },
 
     putdownSpecified: function (data) {
         const CONTEXT = this;
+        let cargoShipID = data.cargoShipID;
+        let cargoShip = document.querySelector('#' + cargoShipID);
+        let containerHolder = cargoShip.components["container-holder"];
         let container = document.querySelector('#' + data.containerID);
         console.log("Specific putdown executed: |" + data.containerID + "|");
         if (container !== null) {
+            containerHolder.addContainer(container);
             container.parentNode.removeChild(container);
+
             CONTEXT.data.pickupAllowed = true;
         }
     },

@@ -87,9 +87,9 @@ AFRAME.registerComponent('game-manager', {
         if (gameType === 'collaborative') {
             for (let i = 0; i < 5; i++) {
                 const container = document.createElement('a-entity');
-                container.setAttribute('id', 'container' + i);
+                container.setAttribute('id', 'container' + i*(Math.floor((Math.random() * (1000)) + 1)));
                 container.setAttribute('class', 'shippingContainer');
-                container.setAttribute('position', {x: -0.4+(i*-0.1), y: 0.8, z: -0.2});
+                container.setAttribute('position', {x: -0.5+(i*-0.1), y: 0.75, z: -0.2});
                 container.setAttribute('rotation', {x: 0, y: 0, z: 0});
                 container.setAttribute('scale', {x: 0.02, y: 0.02, z: 0.02});
                 container.setAttribute('gltf-model', '#blue-container-model');
@@ -99,9 +99,9 @@ AFRAME.registerComponent('game-manager', {
 
             for (let i = 0; i < 5; i++) {
                 const container = document.createElement('a-entity');
-                container.setAttribute('id', 'container' + i);
+                container.setAttribute('id', 'container' + i*(Math.floor((Math.random() * (1000)) + 1)));
                 container.setAttribute('class', 'shippingContainer');
-                container.setAttribute('position', {x: -0.4+(i*-0.1), y: 0.8, z: 0.9});
+                container.setAttribute('position', {x: -0.5+(i*-0.1), y: 0.75, z: 0.9});
                 container.setAttribute('rotation', {x: 0, y: 0, z: 0});
                 container.setAttribute('scale', {x: 0.02, y: 0.02, z: 0.02});
                 container.setAttribute('gltf-model', '#blue-container-model');
@@ -110,6 +110,17 @@ AFRAME.registerComponent('game-manager', {
             }
         }
         if (gameType === 'competitive') {
+            for (let i=0; i<10; i++) {
+                const container = document.createElement('a-entity');
+                container.setAttribute('id', 'container' + i*(Math.floor((Math.random() * (1000)) + 1)));
+                container.setAttribute('class', 'shippingContainer');
+                container.setAttribute('position', {x: -0.5+(i*-0.1), y: 0.75, z: 0.5});
+                container.setAttribute('rotation', {x: 0, y: 0, z: 0});
+                container.setAttribute('scale', {x: 0.02, y: 0.02, z: 0.02});
+                container.setAttribute('gltf-model', '#blue-container-model');
+                container.setAttribute('material', {color: '#ffffff'});
+                scene.appendChild(container);
+            }
         }
     },
 

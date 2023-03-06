@@ -5,34 +5,37 @@ AFRAME.registerComponent('container-holder', {
 
     init : function () {
         const CONTEXT = this;
-        const gameManager = document.querySelector('[game-manager]').components['game-manager'];
-        const cargoShipA = document.querySelector('#cargoShipA');
-        const cargoShipB = document.querySelector('#cargoShipB');
-        const cargoShipC = document.querySelector('#cargoShipC');
- 
-        if (gameManager.data.gameType === "collaborative") {
-            CONTEXT.data.containerCount = 10;
+        CONTEXT.data.containerCount = 0;
 
-            CONTEXT.el.addEventListener('containerPlaced', function (evt) {
-                CONTEXT.data.containerCount += 1;
-            });
-            CONTEXT.el.addEventListener('containerRemoved', function (evt) {
-                CONTEXT.data.containerCount -= 1;
-            });
-        }
+        CONTEXT.addContainer = CONTEXT.addContainer.bind(CONTEXT);
+        CONTEXT.removeContainer = CONTEXT.removeContainer.bind(CONTEXT);
 
-        if (gameManager.data.gameType === "competitive") {
-            CONTEXT.data.containerCount = 0;
-            CONTEXT.el.addEventListener('containerPlaced', function (evt) {
-                CONTEXT.data.containerCount += 1;
-            });
-            CONTEXT.el.addEventListener('containerRemoved', function (evt) {
-                CONTEXT.data.containerCount -= 1;
-            });
-        }
+        CONTEXT.el.addEventListener('addContainer', CONTEXT.addContainer);
+        CONTEXT.el.addEventListener('removeContainer', CONTEXT.removeContainer);
+    },
 
-        if (gameManager.data.gameType === undefined) {
-            console.error("No game type specified for container-holder component");
-        }
+    tick: function () {
+        const CONTEXT = this;
+    },
+
+    addContainer: function (container) {
+        const CONTEXT = this;
+        console.log("container added to "+ CONTEXT.el.id);
+        //add one to the containerCount
+        CONTEXT.data.containerCount++;
+        console.log("container added, total: " + CONTEXT.data.containerCount);
+
+        let containerID = container.getAttribute('id');
+
+        let containerToAdd = document.querySelector('#'+containerID);
+
+        //append the incoming container to the cargo ship
+        CONTEXT.el.appendChild(containerToAdd);
+    },
+
+    removeContainer: function (containerID) {
+        const CONTEXT = this;
+        CONTEXT.data.containerCount--;
+        console.log("container removed, total: " + CONTEXT.data.containerCount);
     },
 });

@@ -1,6 +1,5 @@
 //the component that allows the player to control the crane's motions using WASD and SPACE
-//and, using socket.io, sends data about the cranes position to the server, which then sends it to the other player
-//receives the data from the other player and updates the other crane's position
+//and, using socket.io, handles events to and from the server to communicate data with the other player
 
 AFRAME.registerComponent('crane-controller', {
     //required components
@@ -97,12 +96,15 @@ AFRAME.registerComponent('crane-controller', {
             if (data.craneNum === 1 && CONTEXT.data.craneToControl === 2) {
                 pickupContainer.putdownSpecified( {
                     containerID: data.containerID,
+                    cargoShipID: data.cargoShipID,
                 });
             }
             //if the event is from crane 2 and this player is controlling crane 1, putdown the container with the other crane
             if (data.craneNum === 2 && CONTEXT.data.craneToControl === 1) {
                 pickupContainer.putdownSpecified( {
                     containerID: data.containerID,
+                    cargoShipID: data.cargoShipID,
+
             });
             }
         });
