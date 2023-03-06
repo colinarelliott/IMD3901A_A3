@@ -22,6 +22,7 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
             console.log("pickupContainer function called");
             //refresh container list
             CONTEXT.data.containers = document.querySelectorAll('.shippingContainer');
+            console.log(CONTEXT.data.containers);
             //add a list for the distances between the crane and the containers
             if (CONTEXT.data.containers.length > 0) {
                 let distances = [];
@@ -30,7 +31,7 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
                 console.log('pickupContainer event received ' + magnetNumber);
                 //get the crane controller component and reparent the closest container to the magnet
 
-                //CONTAINER PICKING ALGORITHM
+                //CONTAINER PICKING ALGORITHM (currently grabs closest container to the crane base, should really be the magnet location)
                 let crane = document.querySelector('#crane' + magnetNumber);
                 let cranePosition = crane.getAttribute('position');
                 //loop through all containers and measure the distance between the crane and the container
@@ -40,17 +41,22 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
                     //append distances to a list
                     distances.push(Math.sqrt(Math.pow((containerPosition.x - cranePosition.x), 2) + Math.pow((containerPosition.z - cranePosition.z), 2)));
                 }
-                let containerToPickup = CONTEXT.data.containers[distances.indexOf(Math.min(distances))].getAttribute('id'); //get the index of the minimum distance
+
+                let minDistance = Math.min.apply(Math, distances); //get the minimum distance 
+                let indexOfMinDistance = distances.indexOf(minDistance); //get the index of the minimum distance
+                let containerToPickup = CONTEXT.data.containers[indexOfMinDistance]; //get the container that is closest to the crane
+                let containerID = containerToPickup.getAttribute('id'); //get the id of the container to pickup
+
                 craneController.pickupContainerEvent({
                     magnetNumber: magnetNumber,
-                    containerToPickup: containerToPickup
+                    containerToPickup: containerID
                 }); //trigger the pickupContainerEvent in the crane-controller component
                 //END CONTAINER PICKING ALGORITHM
 
-                console.log("Pickup executed: |" +magnetNumber+"|"+containerToPickup+"|");
+                console.log("Pickup executed: |" +magnetNumber+"|"+containerID+"|");
                 //trigger a function in the crane-controller component to move the crane to the container and send an event to the server
 
-                let container = document.querySelector('#' + containerToPickup);
+                let container = document.querySelector('#' + containerID);
                 let magnet = document.querySelector('#crane-magnet' + magnetNumber);
                 let copy = container.cloneNode(true);
                 //parent the copy to the magnet
