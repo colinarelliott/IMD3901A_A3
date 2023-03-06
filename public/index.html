@@ -26,8 +26,11 @@
                 <!--This work is based on "Shipping containers" (https://sketchfab.com/3d-models/shipping-containers-cc3f7136710f4905905eae1d10ac50b7) by Mateusz Woliński (https://sketchfab.com/jeandiz) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)-->
                 <a-asset id="blue-container-model" src="assets/models/blue-container.gltf"></a-asset>
 
+                <a-asset id="cargoShip-model" src="assets/models/low_poly_cargo_ship.glb"></a-asset>
+
                 <!--Textures-->
-                <img id="concrete-texture" src="assets/textures/concrete.jpg">
+                <!--https://www.freepik.com/free-photo/old-cement-wall-texture_920589.htm#query=concrete%20texture%20floor&position=0&from_view=search&track=ais Image by asierromero on Freepik -->
+                <img id="concrete-texture" src="assets/textures/concrete.jpg" crossorigin="anonymous">
             </a-assets>
 
             <a-entity id="gameManager" gameManager></a-entity>
@@ -100,7 +103,7 @@
             <a-entity 
                 id="crane1"
                 gltf-model="#crane-model"
-                position="-0.5 0.71 0"
+                position="-0.5 0.71 0.1"
                 rotation="0 90 0"
                 scale="0.005 0.005 0.005"
                 shadow>
@@ -120,7 +123,7 @@
             <a-entity 
                 id="crane2"
                 gltf-model="#crane-model"
-                position="-1 0.71 0.9"
+                position="-1 0.71 0.8"
                 scale="0.005 0.005 0.005"
                 shadow>
                 <a-entity
@@ -148,6 +151,38 @@
                 shadow
             ></a-entity>
 
+             <!--Cargoship models A&B are for competitive mode-->
+             <a-entity
+             id="cargoShip-model-A"
+             gltf-model="#cargoShip-model"
+             position="-0.65 0.9 0"
+             rotation="0 90 0"
+             scale="0.0002 0.0002 0.0002"
+             shadow
+             visible="true"
+            ></a-entity>
+
+            <a-entity
+                id="cargoShip-model-B"
+                gltf-model="#cargoShip-model"
+                position="-0.8 0.9 0.9"
+                rotation="0 270 0"
+                scale="0.0002 0.0002 0.0002"
+                shadow
+                visible="true"
+            ></a-entity>
+
+            <!--Cargo ship model C is for collaborative mode-->
+            <a-entity
+                id="cargoShip-model-C"
+                gltf-model="#cargoShip-model"
+                position="-0.7 0.9 0.4"
+                rotation="0 90 0"
+                scale="0.0002 0.0002 0.0002"
+                shadow
+                visible="false"
+            ></a-entity>
+
             <!--Environment-->
             <a-entity 
                 id="env" 
@@ -170,7 +205,7 @@
 
             <a-entity 
                 id="light"
-                light="type: ambient; color: #FFFFFF; intensity: 0.3;"
+                light="type: ambient; color: #FFFFFF; intensity: 0.5;"
             ></a-entity>
 
         </a-scene>
