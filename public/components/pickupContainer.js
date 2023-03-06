@@ -7,6 +7,7 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
         pickupAllowed: {type: 'boolean', default: true}
     },
     init: function () {
+        console.log("pickupContainer component initialized");
         const CONTEXT = this;
         CONTEXT.pickup = CONTEXT.pickup.bind(CONTEXT);
         CONTEXT.putdown = CONTEXT.putdown.bind(CONTEXT);

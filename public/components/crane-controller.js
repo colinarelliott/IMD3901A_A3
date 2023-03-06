@@ -16,6 +16,7 @@ AFRAME.registerComponent('crane-controller', {
         doOnce: {type: 'boolean', default: true}, //a boolean that is used to only run specific code in the tick function once
     },
     init: function () {
+        console.log("crane-controller component initialized");
         const CONTEXT = this;
         const pickupContainer = CONTEXT.el.components['pickupContainer']; //get the pickupContainer component
         CONTEXT.camera = document.querySelector('#camera'); //get the camera
