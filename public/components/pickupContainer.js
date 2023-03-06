@@ -1,3 +1,4 @@
+//BEGIN COMPONENT
 // a component that allows the crane magnets to pickup the nearest container when dropped.
 
 AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controller component
@@ -5,7 +6,9 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
         //list of all containers
         containers: {type: 'selectorAll', default: '.shippingContainer'},
         cargoShips: {type: 'selectorAll', default: '.cargoShip'},
-        pickupAllowed: {type: 'boolean', default: true}
+        pickupAllowed: {type: 'boolean', default: true},
+        worldPosMagnet1: {type: 'vec3', default: {x: 0, y: 0, z: 0}},
+        worldPosMagnet2: {type: 'vec3', default: {x: 0, y: 0, z: 0}},
     },
     init: function () {
         console.log("pickupContainer component initialized");
@@ -15,8 +18,10 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
     },
 
     pickup: function (data) {
+        //TRYING TO FIGURE OUT HOW TO CONSTRICT PICKUP TO ONLY IN VALID ZONES
         const CONTEXT = this;
         const craneController = document.querySelector('[crane-controller]').components['crane-controller']; //get the crane-controller component
+        const gameManager = document.querySelector('[game-manager]').components['game-manager']; //get the game-manager component
         //check if the pickup is allowed
         if (CONTEXT.data.pickupAllowed === true) {
             console.log("pickupContainer function called");
@@ -32,13 +37,12 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
                 //get the crane controller component and reparent the closest container to the magnet
 
                 //CONTAINER PICKING ALGORITHM (currently grabs closest container to the crane base, should really be the magnet location)
-                let craneMagnet = document.querySelector('#crane-magnet' + magnetNumber);
-                let craneMagnetPosition = craneMagnet.getAttribute('position');
-                console.log("craneMagnetPosition: " + craneMagnetPosition.x + " " + craneMagnetPosition.z);
+
                 //loop through all containers and measure the distance between the crane and the container
                 for (i = 0; i < CONTEXT.data.containers.length; i++) { //measure each distance between the containers and the crane
                     let container = CONTEXT.data.containers[i];
                     let containerPosition = container.getAttribute('position');
+                    let craneMagnetPosition = document.querySelector('#crane-magnet' + magnetNumber).getAttribute('position'); //get the position of the crane magnet
                     //append distances to a list
                     distances.push(Math.sqrt(Math.pow((containerPosition.x - craneMagnetPosition.x), 2) + Math.pow((containerPosition.z - craneMagnetPosition.z), 2)));
                 }
@@ -48,12 +52,13 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
                 let containerToPickup = CONTEXT.data.containers[indexOfMinDistance]; //get the container that is closest to the crane
                 let containerID = containerToPickup.getAttribute('id'); //get the id of the container to pickup
 
+                //END CONTAINER PICKING ALGORITHM
+
+                //send pickup event to server via crane-controller component
                 craneController.pickupContainerEvent({
                     magnetNumber: magnetNumber,
                     containerToPickup: containerID
                 }); //trigger the pickupContainerEvent in the crane-controller component
-                //END CONTAINER PICKING ALGORITHM
-
                 
                 //trigger a function in the crane-controller component to move the crane to the container and send an event to the server
                 let container = document.querySelector('#' + containerID);
@@ -191,5 +196,6 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
     },
 
     tick: function () {
+        const CONTEXT = this;
     }
 });
