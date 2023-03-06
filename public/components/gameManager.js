@@ -1,4 +1,4 @@
-AFRAME.registerComponent('gameManager', { 
+AFRAME.registerComponent('game-manager', { 
     schema: {
         gameStarted: {type: 'boolean', default: false},
         gameType: {type: 'string', oneOf: 'collaborative, competitive', default: 'collaborative'},
