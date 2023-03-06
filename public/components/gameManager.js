@@ -55,10 +55,6 @@ AFRAME.registerComponent('game-manager', {
 
         //set the gameStarted variable to true
         CONTEXT.data.gameStarted = true;
-
-        //initialize the container holder component on ship C
-        const containerHolder = document.querySelector('[container-holder]').components['container-holder'];
-        containerHolder.initialize();
     },
 
     competitiveInit: function () {
@@ -72,9 +68,12 @@ AFRAME.registerComponent('game-manager', {
         CONTEXT.data.shipDropoffRotation2 = {x: 60, y: 90};
 
         //set visibility of cargo ships
-        cargoShipA.setAttribute('visible', true);x
+        cargoShipA.setAttribute('visible', true);
         cargoShipB.setAttribute('visible', true);
         cargoShipC.setAttribute('visible', false);
+
+        let containerHolderA = cargoShipA.components['containerHolder'];
+        let containerHolderB = cargoShipB.components['containerHolder'];
     },
 
     tick: function () {
