@@ -13,6 +13,7 @@ AFRAME.registerComponent('game-manager', {
         //bind functions to the context of the component
         CONTEXT.collaborativeInit = CONTEXT.collaborativeInit.bind(CONTEXT);
         CONTEXT.competitiveInit = CONTEXT.competitiveInit.bind(CONTEXT);
+        CONTEXT.spawnContainers = CONTEXT.spawnContainers.bind(CONTEXT);
 
         CONTEXT.data.gameType = 'collaborative'; //set the game type to collaborative by default
         
@@ -55,6 +56,8 @@ AFRAME.registerComponent('game-manager', {
 
         //set the gameStarted variable to true
         CONTEXT.data.gameStarted = true;
+
+        CONTEXT.spawnContainers("collaborative");
     },
 
     competitiveInit: function () {
@@ -72,9 +75,44 @@ AFRAME.registerComponent('game-manager', {
         cargoShipB.setAttribute('visible', true);
         cargoShipC.setAttribute('visible', false);
 
-        let containerHolderA = cargoShipA.components['containerHolder'];
-        let containerHolderB = cargoShipB.components['containerHolder'];
+        //set the gameStarted variable to true
+        CONTEXT.data.gameStarted = true;
+
+        CONTEXT.spawnContainers("competitive");
     },
+
+    spawnContainers: function (gameType) {
+        const CONTEXT = this;
+        const scene = document.querySelector('#scene');
+        if (gameType === 'collaborative') {
+            for (let i = 0; i < 5; i++) {
+                const container = document.createElement('a-entity');
+                container.setAttribute('id', 'container' + i);
+                container.setAttribute('class', 'shippingContainer');
+                container.setAttribute('position', {x: -0.4+(i*-0.1), y: 0.8, z: -0.2});
+                container.setAttribute('rotation', {x: 0, y: 0, z: 0});
+                container.setAttribute('scale', {x: 0.02, y: 0.02, z: 0.02});
+                container.setAttribute('gltf-model', '#blue-container-model');
+                container.setAttribute('material', {color: '#ffffff'});
+                scene.appendChild(container);
+            }
+
+            for (let i = 0; i < 5; i++) {
+                const container = document.createElement('a-entity');
+                container.setAttribute('id', 'container' + i);
+                container.setAttribute('class', 'shippingContainer');
+                container.setAttribute('position', {x: -0.4+(i*-0.1), y: 0.8, z: 0.9});
+                container.setAttribute('rotation', {x: 0, y: 0, z: 0});
+                container.setAttribute('scale', {x: 0.02, y: 0.02, z: 0.02});
+                container.setAttribute('gltf-model', '#blue-container-model');
+                container.setAttribute('material', {color: '#ffffff'});
+                scene.appendChild(container);
+            }
+        }
+        if (gameType === 'competitive') {
+        }
+    },
+
 
     tick: function () {
         const CONTEXT = this;
