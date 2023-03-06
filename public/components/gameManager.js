@@ -52,6 +52,13 @@ AFRAME.registerComponent('game-manager', {
         cargoShipA.setAttribute('visible', false);
         cargoShipB.setAttribute('visible', false);
         cargoShipC.setAttribute('visible', true);
+
+        //set the gameStarted variable to true
+        CONTEXT.data.gameStarted = true;
+
+        //initialize the container holder component on ship C
+        const containerHolder = document.querySelector('[container-holder]').components['container-holder'];
+        containerHolder.initialize();
     },
 
     competitiveInit: function () {
