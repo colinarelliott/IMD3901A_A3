@@ -14,6 +14,7 @@
         <script src="components/gameManager.js"></script>
         <script src="components/crane-controller.js"></script>
         <script src="components/pickupContainer.js"></script>
+        <script src="components/container-holder.js"></script>
     </head>
     <body>
         <a-scene id="scene" physics="debug: true;">
@@ -147,7 +148,7 @@
                 class="shippingContainer"
                 gltf-model="#blue-container-model"
                 position="-0.65 0.8 0.5"
-                scale="0.04 0.04 0.04"
+                scale="0.02 0.02 0.02"
                 shadow
             ></a-entity>
 
@@ -160,6 +161,7 @@
              scale="0.0002 0.0002 0.0002"
              shadow
              visible="false"
+             container-holder
             ></a-entity>
 
             <a-entity
