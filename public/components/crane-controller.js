@@ -17,14 +17,18 @@ AFRAME.registerComponent('crane-controller', {
     },
     init: function () {
         const CONTEXT = this;
+        const pickupContainer = CONTEXT.el.components['pickupContainer']; //get the pickupContainer component
         CONTEXT.camera = document.querySelector('#camera'); //get the camera
         //bind the functions to the context of the component
         CONTEXT.onKeydown = CONTEXT.onKeydown.bind(CONTEXT); //this function will be executed on keydown
         CONTEXT.onKeyup = CONTEXT.onKeyup.bind(CONTEXT); //this function will be executed on keyup
+        CONTEXT.pickupContainerEvent = CONTEXT.pickupContainerEvent.bind(CONTEXT); //this function will be executed when the pickupContainer event is received
+        CONTEXT.putdownContainerEvent = CONTEXT.putdownContainerEvent.bind(CONTEXT); //this function will be executed when the putdownContainer event is received
         CONTEXT.socket = io(); //connect to the server
 
         window.addEventListener('keydown', CONTEXT.onKeydown); //add the keydown event listener
         window.addEventListener('keyup', CONTEXT.onKeyup); //add the keyup event listener
+        CONTEXT.el.addEventListener('pickupContainer', CONTEXT.pickupContainerEvent); //add the pickupContainer event listener
         //debug connect and disconnect logs
         CONTEXT.socket.on('connect', (userData) => {
             console.log("I have connected to the server!");
@@ -62,6 +66,46 @@ AFRAME.registerComponent('crane-controller', {
                 CONTEXT.data.otherMagnetPosY = data.magnetPosY;
             }
         });
+
+        //receive the pickupContainer event from the server
+        CONTEXT.socket.on('pickupContainer', (data) => {
+            console.log("pickupContainer event received from server");
+            console.log(data);
+
+            //if the event is from crane 1 and this player is controlling crane 2, pickup the container with the other crane
+            if (data.magnetNumber === 1 && CONTEXT.data.craneToControl === 2) {
+                pickupContainer.pickupSpecified( {
+                    craneNum: data.magnetNumber,
+                    containerID: data.containerToPickup,
+                });
+            }
+            //if the event is from crane 2 and this player is controlling crane 1, pickup the container with the other crane
+            if (data.magnetNumber === 2 && CONTEXT.data.craneToControl === 1) {
+                pickupContainer.pickupSpecified( {
+                    craneNum: data.magnetNumber,
+                    containerID: data.containerToPickup,
+                });
+            }
+        });
+
+        CONTEXT.socket.on('putdownContainer', (data) => {
+            console.log("putdownContainer event received from server");
+            console.log(data);
+
+            //if the event is from crane 1 and this player is controlling crane 2, putdown the container with the other crane
+            if (data.craneNum === 1 && CONTEXT.data.craneToControl === 2) {
+                pickupContainer.putdownSpecified( {
+                    containerID: data.containerID,
+                });
+            }
+            //if the event is from crane 2 and this player is controlling crane 1, putdown the container with the other crane
+            if (data.craneNum === 2 && CONTEXT.data.craneToControl === 1) {
+                pickupContainer.putdownSpecified( {
+                    containerID: data.containerID,
+            });
+            }
+        });
+                
 
         setInterval(function() {
             //update the crane's position to the server
@@ -273,12 +317,23 @@ AFRAME.registerComponent('crane-controller', {
         }
     },
 
+    pickupContainerEvent: function(data) {
+        const CONTEXT = this;
+        //passthrough from DOM event to socket event
+        CONTEXT.socket.emit('pickupContainer', data);
+    },
+
+    putdownContainerEvent: function(data) {
+        const CONTEXT = this;
+        //passthrough from DOM event to socket event
+        CONTEXT.socket.emit('putdownContainer', data);
+    },
+
     updateSchema: function (event) {      
     },
 
     remove: function() {
         //if the crane-controller is removed, remove all event listeners and socket listeners
-        let socket = io();
         socket.removeAllListeners();
         CONTEXT.removeEventListeners();
     }
