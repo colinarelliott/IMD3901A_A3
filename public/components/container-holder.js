@@ -6,16 +6,27 @@ AFRAME.registerComponent('container-holder', {
     init : function () {
         const CONTEXT = this;
         CONTEXT.data.containerCount = 0;
-
         CONTEXT.addContainer = CONTEXT.addContainer.bind(CONTEXT);
         CONTEXT.removeContainer = CONTEXT.removeContainer.bind(CONTEXT);
-
+        CONTEXT.updateServer = CONTEXT.updateServer.bind(CONTEXT);
         CONTEXT.el.addEventListener('addContainer', CONTEXT.addContainer);
         CONTEXT.el.addEventListener('removeContainer', CONTEXT.removeContainer);
+        CONTEXT.el.addEventListener('updateServer', CONTEXT.updateServer);
+
+        setInterval(CONTEXT.updateServer, 100);
     },
 
     tick: function () {
         const CONTEXT = this;
+        //get all the children of the cargo ship
+        let children = CONTEXT.el.children;
+        //loop through the children
+        for (let i = 0; i < children.length; i++) {
+            //show the containers on the ship
+            children[i].setAttribute('visible', true);
+            //set the position of the containers on the ship
+            children[i].setAttribute('position', {x: 0, y: 0.5, z: 0});
+        }
     },
 
     addContainer: function (container) {
@@ -28,9 +39,18 @@ AFRAME.registerComponent('container-holder', {
         let containerID = container.getAttribute('id');
 
         let containerToAdd = document.querySelector('#'+containerID);
-
-        //append the incoming container to the cargo ship
-        CONTEXT.el.appendChild(containerToAdd);
+        let copy = containerToAdd.cloneNode(true);
+        setTimeout(function () {
+            copy.setAttribute('class', 'containerOnShip');
+            copy.setAttribute('scale', {x: 1, y: 1, z: 1});
+            copy.setAttribute('position', {x: 0, y: 5, z: 0});
+            copy.setAttribute('rotation', {x: 0, y: 0, z: 0});
+            copy.setAttribute('gltf-model', 'assets/models/blue-container.gltf');
+            //append the incoming container to the cargo ship
+            CONTEXT.el.appendChild(copy);
+            //remove the incoming container
+            containerToAdd.parentNode.removeChild(containerToAdd);
+        }, 10);
     },
 
     removeContainer: function (containerID) {

@@ -53,11 +53,11 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
                 }); //trigger the pickupContainerEvent in the crane-controller component
                 //END CONTAINER PICKING ALGORITHM
 
-                console.log("Pickup executed: |" +magnetNumber+"|"+containerID+"|");
+                
                 //trigger a function in the crane-controller component to move the crane to the container and send an event to the server
-
                 let container = document.querySelector('#' + containerID);
                 let magnet = document.querySelector('#crane-magnet' + magnetNumber);
+                console.log("Pickup executed: |" +magnetNumber+"|"+containerID+"|");
                 let copy = container.cloneNode(true);
                 //parent the copy to the magnet
                 magnet.appendChild(copy);
@@ -68,6 +68,7 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
                     copy.setAttribute('position', {x: 0, y: -14, z: 0});
                     copy.setAttribute('rotation', {x: 0, y: 0, z: 0});
                     copy.setAttribute('scale', {x: 5, y: 5, z: 5});
+                    copy.setAttribute('gltf-model', 'assets/models/blue-container.gltf'); //has to be an absolute reference, # doesn't work
                     copy.setAttribute('class', 'heldContainer'); //remove class so it doesn't get picked up again
                     CONTEXT.data.pickupAllowed = false;
                 }, 10);
@@ -174,7 +175,6 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
             console.log("Putdown executed: |" + container.parentNode.getAttribute('id') + "|" + container.getAttribute('id') + "|");
             if (container !== null) {
                 cargoShipToTarget.components["container-holder"].addContainer(container);
-                container.parentNode.removeChild(container);
                 CONTEXT.data.pickupAllowed = true;
             }
         }
@@ -192,8 +192,6 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
         console.log("Specific putdown executed: |" + data.containerID + "|");
         if (container !== null) {
             containerHolder.addContainer(container);
-            container.parentNode.removeChild(container);
-
             CONTEXT.data.pickupAllowed = true;
         }
     },
