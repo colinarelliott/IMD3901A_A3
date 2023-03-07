@@ -151,42 +151,71 @@ AFRAME.registerComponent('game-manager', {
         if (CONTEXT.data.gameStarted === true) {
             //check gamemode
             if (CONTEXT.data.gameType === "collaborative") {
-                //if the crane is in the dropoff zone, allow the player to drop off cargo
-                if (CONTEXT.data.crane1Dock.x < craneController.data.rotation && CONTEXT.data.crane1Dock.y > craneController.data.rotation) {
-                    CONTEXT.data.crane1PutdownAllowed = true;
+                //if the crane is #1
+                if (craneController.data.craneToControl === 1) {
+                    //if the crane is in the dropoff zone, allow the player to drop off cargo
+                    if (CONTEXT.data.crane1Dock.x < craneController.data.rotation && CONTEXT.data.crane1Dock.y > craneController.data.rotation) {
+                        CONTEXT.data.crane1PutdownAllowed = true;
+                    } else {
+                        CONTEXT.data.crane1PutdownAllowed = false; //if it's not in the dropoff zone, no putdown is allowed
+                    }
+                    //if the crane is in the pickup zone, allow the player to pick up cargo
+                    if (CONTEXT.data.crane1Center.x < craneController.data.rotation && CONTEXT.data.crane1Center.y > craneController.data.rotation) {
+                        CONTEXT.data.crane1PickupAllowed = true;
+                    } else {
+                        CONTEXT.data.crane1PickupAllowed = false; //if it's not in the pickup zone, no pickup is allowed
+                    }
                 }
-                //if the crane is in the dropoff zone, allow the player to drop off cargo
-                if (CONTEXT.data.crane2Dock.x < craneController.data.rotation && CONTEXT.data.crane2Dock.y > craneController.data.rotation) {
-                    CONTEXT.data.crane2PutdownAllowed = true;
-                }
-                //if the crane is in the pickup zone, allow the player to pick up cargo
-                if (CONTEXT.data.crane1Center.x < craneController.data.rotation && CONTEXT.data.crane1Center.y > craneController.data.rotation) {
-                    CONTEXT.data.crane1PickupAllowed = true;
-                }
-                //if the crane is in the pickup zone, allow the player to pick up cargo
-                if (CONTEXT.data.crane2Center.x < craneController.data.rotation && CONTEXT.data.crane2Center.y > craneController.data.rotation) {
-                    CONTEXT.data.crane2PickupAllowed = true;
+
+                if (craneController.data.craneToControl === 2) {
+                    //if the crane is in the dropoff zone, allow the player to drop off cargo
+                    if (CONTEXT.data.crane2Dock.x < craneController.data.rotation && CONTEXT.data.crane2Dock.y > craneController.data.rotation) {
+                        CONTEXT.data.crane2PutdownAllowed = true;
+                    } else {
+                        CONTEXT.data.crane2PutdownAllowed = false; //if it's not in the dropoff zone, no putdown is allowed
+                    }
+
+                    //if the crane is in the pickup zone, allow the player to pick up cargo
+                    if (CONTEXT.data.crane2Center.x < craneController.data.rotation && CONTEXT.data.crane2Center.y > craneController.data.rotation) {
+                        CONTEXT.data.crane2PickupAllowed = true;
+                    } else {
+                        CONTEXT.data.crane2PickupAllowed = false; //if it's not in the pickup zone, no pickup is allowed
+                    }
                 }
             }
 
             //check gamemode
             if (CONTEXT.data.gameType === "competitive") {
-                //if the crane is in the dropoff zone, allow the player to drop off cargo
-                if (CONTEXT.data.crane1Center.x < craneController.data.rotation && CONTEXT.data.crane1Center.y > craneController.data.rotation) {
-                    CONTEXT.data.crane1PutdownAllowed = true;
+                //if the crane is #1
+                if(craneController.data.craneToControl === 1) {
+                    //if the crane is in the dropoff zone, allow the player to drop off cargo
+                    if (CONTEXT.data.crane1Center.x < craneController.data.rotation && CONTEXT.data.crane1Center.y > craneController.data.rotation) {
+                        CONTEXT.data.crane1PutdownAllowed = true;
+                    } else {
+                        CONTEXT.data.crane1PutdownAllowed = false; //if it's not in the dropoff zone, no putdown is allowed
+                    }
+                    //if the crane is in the pickup zone, allow the player to pick up cargo
+                    if (CONTEXT.data.crane1Dock.x < craneController.data.rotation && CONTEXT.data.crane1Dock.y > craneController.data.rotation) {
+                        CONTEXT.data.crane1PickupAllowed = true;
+                    } else {
+                        CONTEXT.data.crane1PickupAllowed = false; //if it's not in the pickup zone, no pickup is allowed
+                    }
                 }
-                //if the crane is in the dropoff zone, allow the player to drop off cargo
-                if (CONTEXT.data.crane2Center.x < craneController.data.rotation && CONTEXT.data.crane2Center.y > craneController.data.rotation) {
-                    CONTEXT.data.crane2PutdownAllowed = true;
-                }
-                
-                //if the crane is in the pickup zone, allow the player to pick up cargo
-                if (CONTEXT.data.crane1Dock.x < craneController.data.rotation && CONTEXT.data.crane1Dock.y > craneController.data.rotation) {
-                    CONTEXT.data.crane1PickupAllowed = true;
-                }
-                //if the crane is in the pickup zone, allow the player to pick up cargo
-                if (CONTEXT.data.crane2Dock.x < craneController.data.rotation && CONTEXT.data.crane2Dock.y > craneController.data.rotation) {
-                    CONTEXT.data.crane2PickupAllowed = true;
+
+                //check if the crane is #2
+                if (craneController.data.craneToControl === 2) {
+                    //if the crane is in the dropoff zone, allow the player to drop off cargo
+                    if (CONTEXT.data.crane2Center.x < craneController.data.rotation && CONTEXT.data.crane2Center.y > craneController.data.rotation) {
+                        CONTEXT.data.crane2PutdownAllowed = true;
+                    } else {
+                        CONTEXT.data.crane2PutdownAllowed = false; //if it's not in the dropoff zone, no putdown is allowed
+                    }
+                    //if the crane is in the pickup zone, allow the player to pick up cargo
+                    if (CONTEXT.data.crane2Dock.x < craneController.data.rotation && CONTEXT.data.crane2Dock.y > craneController.data.rotation) {
+                        CONTEXT.data.crane2PickupAllowed = true;
+                    } else {
+                        CONTEXT.data.crane2PickupAllowed = false; //if it's not in the pickup zone, no pickup is allowed
+                    }
                 }
             }
         }
