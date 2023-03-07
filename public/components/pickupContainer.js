@@ -7,8 +7,7 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
         containers: {type: 'selectorAll', default: '.shippingContainer'},
         cargoShips: {type: 'selectorAll', default: '.cargoShip'},
         pickupAllowed: {type: 'boolean', default: true},
-        worldPosMagnet1: {type: 'vec3', default: {x: 0, y: 0, z: 0}},
-        worldPosMagnet2: {type: 'vec3', default: {x: 0, y: 0, z: 0}},
+        putdownAllowed: {type: 'boolean', default: false},
     },
     init: function () {
         console.log("pickupContainer component initialized");
@@ -21,7 +20,6 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
         //TRYING TO FIGURE OUT HOW TO CONSTRICT PICKUP TO ONLY IN VALID ZONES
         const CONTEXT = this;
         const craneController = document.querySelector('[crane-controller]').components['crane-controller']; //get the crane-controller component
-        const gameManager = document.querySelector('[game-manager]').components['game-manager']; //get the game-manager component
         //check if the pickup is allowed
         if (CONTEXT.data.pickupAllowed === true) {
             console.log("pickupContainer function called");
@@ -47,6 +45,8 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
                     distances.push(Math.sqrt(Math.pow((containerPosition.x - craneMagnetPosition.x), 2) + Math.pow((containerPosition.z - craneMagnetPosition.z), 2)));
                 }
 
+                console.log(distances);
+
                 let minDistance = Math.min.apply(Math, distances); //get the minimum distance 
                 let indexOfMinDistance = distances.indexOf(minDistance); //get the index of the minimum distance
                 let containerToPickup = CONTEXT.data.containers[indexOfMinDistance]; //get the container that is closest to the crane
@@ -54,11 +54,7 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
 
                 //END CONTAINER PICKING ALGORITHM
 
-                //send pickup event to server via crane-controller component
-                craneController.pickupContainerEvent({
-                    magnetNumber: magnetNumber,
-                    containerToPickup: containerID
-                }); //trigger the pickupContainerEvent in the crane-controller component
+                //send pickup event to server via crane-controller component //trigger the pickupContainerEvent in the crane-controller component
                 
                 //trigger a function in the crane-controller component to move the crane to the container and send an event to the server
                 let container = document.querySelector('#' + containerID);
@@ -76,8 +72,14 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
                     copy.setAttribute('scale', {x: 5, y: 5, z: 5});
                     copy.setAttribute('gltf-model', 'assets/models/blue-container.gltf'); //has to be an absolute reference, # doesn't work
                     copy.setAttribute('class', 'heldContainer'); //remove class so it doesn't get picked up again
-                    CONTEXT.data.pickupAllowed = false;
                 }, 10);
+
+                craneController.pickupContainerEvent({
+                    magnetNumber: magnetNumber,
+                    containerToPickup: containerID
+                });
+
+                CONTEXT.data.pickupAllowed = false;
             } else {
                 console.log("No containers to pickup");
             }
@@ -118,7 +120,7 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
                 craneNum: craneController.data.craneToControl,
                 cargoShipID: cargoShipID,
             }); //trigger the putdownContainerEvent in the crane-controller component
-
+            
             if (craneController.data.craneToControl === 1) {
                 if (gameManager.data.crane1PutdownAllowed === true) {
                     CONTEXT.putdown();
@@ -132,7 +134,7 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
                     gameManager.data.crane2PutdownAllowed = false;
                 }
             }
-
+            
         }
     },
 
@@ -153,9 +155,14 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
                 copy.setAttribute('rotation', {x: 0, y: 0, z: 0});
                 copy.setAttribute('scale', {x: 5, y: 5, z: 5});
                 copy.setAttribute('class', 'heldContainer'); //remove class so it doesn't get picked up again
-                copy.setAttribute('gltf-model', 'assets/models/blue-container.gltf'); //has to be an absolute reference, # doesn't work
-                CONTEXT.data.pickupAllowed = false;
+                copy.setAttribute('gltf-model', '#blue-container-model'); //has to be an absolute reference, # doesn't work
             }, 10);
+
+            craneController.pickupContainerEvent({
+                magnetNumber: magnetNumber,
+                containerToPickup: containerID
+            });
+            CONTEXT.data.pickupAllowed = false;
         } else {
             craneController.putdownContainerEvent({
                 containerID: data.containerID
@@ -197,5 +204,32 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
 
     tick: function () {
         const CONTEXT = this;
+        CONTEXT.data.putdownAllowed = !CONTEXT.data.pickupAllowed; //if pickup is allowed, putdown is not allowed, and vice versa
+
+        const craneController = document.querySelector('#crane-controller').components["crane-controller"];
+        const gameManager = document.querySelector('#gameManager').components["game-manager"]; //get the gameManager component
+
+        //REPORT if crane is allowed to pickup to the gameManager to be synced
+
+        //if the crane is crane 1 and pickup is allowed
+        if (craneController.data.craneToControl === 1 && CONTEXT.data.pickupAllowed === true) {
+            gameManager.data.crane1PickupAllowed = true; //set the crane1PickupAllowed to true in the gameManager
+            gameManager.data.crane1PutdownAllowed = false; //set the crane1PutdownAllowed to false in the gameManager
+        }
+        //if the crane is crane 2 and pickup is allowed
+        if (craneController.data.craneToControl === 2 && CONTEXT.data.pickupAllowed === true) {
+            gameManager.data.crane2PickupAllowed = true; //set the crane2PickupAllowed to true in the gameManager
+            gameManager.data.crane2PutdownAllowed = false; //set the crane2PutdownAllowed to false in the gameManager
+        }
+        //if the crane is crane 1 and pickup is not allowed
+        if (craneController.data.craneToControl === 1 && CONTEXT.data.pickupAllowed === false) {
+            gameManager.data.crane1PickupAllowed = false; //set the crane1PickupAllowed to false in the gameManager
+            gameManager.data.crane1PutdownAllowed = true; //set the crane1PutdownAllowed to true in the gameManager
+        }
+        //if the crane is crane 2 and pickup is not allowed
+        if (craneController.data.craneToControl === 2 && CONTEXT.data.pickupAllowed === false) {
+            gameManager.data.crane2PickupAllowed = false; //set the crane2PickupAllowed to false in the gameManager
+            gameManager.data.crane2PutdownAllowed = true; //set the crane2PutdownAllowed to true in the gameManager
+        }
     }
 });
