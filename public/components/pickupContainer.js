@@ -63,11 +63,16 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
                 copy.setAttribute('class', 'heldContainer'); //remove class so it doesn't get picked up again
             }, 10);
 
-            //send pickupContainerEvent to server
+             /*
             craneController.pickupContainerEvent({
                 magnetNumber: magnetNumber,
+                containerToPickup: containerID //removed because call stack errors
+            }); */
+
+            craneController.socket.emit('pickupContainer', {
+                magnetNumber: magnetNumber,
                 containerToPickup: containerID
-            });
+            })
 
         } else {
             console.log("No containers to pickup");
@@ -109,6 +114,8 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
         const craneController = document.querySelector('[crane-controller]').components["crane-controller"]; //get the craneController component
         const gameManager = document.querySelector('#gameManager').components["game-manager"]; //get the gameManager component
 
+        console.log("putdown executed by P" + data.craneToControl);
+
         let heldContainers = document.querySelectorAll('.heldContainer');
 
         let containerToPutdown = null;
@@ -127,6 +134,8 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
             }
         }
 
+        console.log("containerToPutdown: " + containerToPutdown.getAttribute('id'));
+
         //put the container down on the nearest cargo ship if it is a competitive game
         if (gameManager.data.gameType === 'competitive') {
             if (craneController.data.craneToControl === 1) {
@@ -144,25 +153,27 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
             //ADD container to the specific cargo ship
         }
 
-        //actually put it on the ship and remove it from the crane
-        if (containerToPutdown !== null) {
-            cargoShipToTarget.components["container-holder"].addContainer();
-            containerToPutdown.parentNode.removeChild(containerToPutdown); //remove the container from the crane
-        }
+        console.log("cargoShipToTarget: " + cargoShipToTarget.getAttribute('id'));
 
         //grab the cargoShipID to be forwarded to the server
         let cargoShipID = cargoShipToTarget.getAttribute('id');
 
-        //send putdownContainerEvent to server via craneController
-        craneController.putdownContainerEvent({
-            containerID: containerToPutdown,
-            craneNum: craneController.data.craneToControl,
-            cargoShipID: cargoShipID,
-        }); //trigger the putdownContainerEvent in the crane-controller component
+        //actually put it on the ship and remove it from the crane
+        if (containerToPutdown !== null) {
+            craneController.socket.emit('putdownContainer', { //call stack is too large so I had to send the event from here rather than relaying it from the craneController
+                containerID: containerToPutdown.getAttribute('id'),
+                craneNum: craneController.data.craneToControl,
+                cargoShipID: cargoShipID,
+            });
+            setTimeout(function () {
+                cargoShipToTarget.components["container-holder"].addContainer();
+                containerToPutdown.parentNode.removeChild(containerToPutdown); //remove the container from the crane
+                console.log("container put down complete");
+            }, 10); //10ms later to make sure it happens after the server is sent the event
+        }
     },
 
     putdownSpecified: function (data) {
-        const CONTEXT = this;
         let cargoShipID = data.cargoShipID;
         let cargoShip = document.querySelector('#' + cargoShipID);
         let containerHolder = cargoShip.components["container-holder"];
