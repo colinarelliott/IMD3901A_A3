@@ -30,7 +30,6 @@ AFRAME.registerComponent('game-manager', {
         //bind functions to the context of the component
         CONTEXT.collaborativeInit = CONTEXT.collaborativeInit.bind(CONTEXT);
         CONTEXT.competitiveInit = CONTEXT.competitiveInit.bind(CONTEXT);
-        CONTEXT.spawnContainers = CONTEXT.spawnContainers.bind(CONTEXT);
 
         CONTEXT.data.gameType = 'collaborative'; //set the game type to collaborative by default
         
@@ -59,8 +58,6 @@ AFRAME.registerComponent('game-manager', {
         const CONTEXT = this;
         //set the gameStarted variable to true
         CONTEXT.data.gameStarted = true;
-
-        CONTEXT.spawnContainers("collaborative");
     },
 
     competitiveInit: function () {
@@ -68,55 +65,7 @@ AFRAME.registerComponent('game-manager', {
         //set the gameStarted variable to true
         CONTEXT.data.gameStarted = true;
 
-        CONTEXT.spawnContainers("competitive");
     },
-
-    spawnContainers: function (gameType) {
-        const CONTEXT = this;
-        const scene = document.querySelector('#scene');
-        if (gameType === 'collaborative') {
-            //SHIP A CONTAINERS
-            for (let i = 0; i < 5; i++) {
-                const container = document.createElement('a-entity');
-                container.setAttribute('id', 'container' + i*(Math.floor((Math.random() * (1000)) + 1))); //give the container a random id
-                container.setAttribute('class', 'shippingContainer');
-                container.setAttribute('position', {x: -0.65+(i*-0.1), y: 0.8, z: -0.1});
-                container.setAttribute('rotation', {x: 0, y: 0, z: 0});
-                container.setAttribute('scale', {x: 0.02, y: 0.02, z: 0.02});
-                container.setAttribute('gltf-model', '#blue-container-model');
-                container.setAttribute('material', {color: '#ffffff'});
-                scene.appendChild(container);
-            }
-
-            //SHIP B CONTAINERS
-            for (let i = 0; i < 5; i++) {
-                const container = document.createElement('a-entity');
-                container.setAttribute('id', 'container' + i*(Math.floor((Math.random() * (1000)) + 1))); //give the container a random id
-                container.setAttribute('class', 'shippingContainer');
-                container.setAttribute('position', {x: -0.65+(i*-0.1), y: 0.75, z: 1});
-                container.setAttribute('rotation', {x: 0, y: 0, z: 0});
-                container.setAttribute('scale', {x: 0.02, y: 0.02, z: 0.02});
-                container.setAttribute('gltf-model', '#blue-container-model');
-                container.setAttribute('material', {color: '#ffffff'});
-                scene.appendChild(container);
-            }
-        }
-        //SHIP C CONTAINERS
-        if (gameType === 'competitive') {
-            for (let i=0; i < 0; i++) {
-                const container = document.createElement('a-entity');
-                container.setAttribute('id', 'container' + i*(Math.floor((Math.random() * (1000)) + 1))); //give the container a random id
-                container.setAttribute('class', 'shippingContainer');
-                container.setAttribute('position', {x: -0.4+(i*-0.05), y: 0.85, z: 0.43});
-                container.setAttribute('rotation', {x: 0, y: 0, z: 0});
-                container.setAttribute('scale', {x: 0.02, y: 0.02, z: 0.02});
-                container.setAttribute('gltf-model', '#blue-container-model');
-                container.setAttribute('material', {color: '#ffffff'});
-                scene.appendChild(container);
-            }
-        }
-    },
-
 
     tick: function () {
         const CONTEXT = this;
