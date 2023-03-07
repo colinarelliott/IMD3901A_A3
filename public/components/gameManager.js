@@ -57,19 +57,6 @@ AFRAME.registerComponent('game-manager', {
 
     collaborativeInit: function () {
         const CONTEXT = this;
-        //get the cargo ships
-        const cargoShipA = document.querySelector('#cargoShipA');
-        const cargoShipB = document.querySelector('#cargoShipB');
-        const cargoShipC = document.querySelector('#cargoShipC');
-        //set rotation of crane dependent dropoff zones (a range where the player can drop off cargo)
-        CONTEXT.data.shipDropoffRotation1 = {x: -210, y: -180};
-        CONTEXT.data.shipDropoffRotation2 = {x: -30, y: 0};
-
-        //set visibility of cargo ships
-        cargoShipA.setAttribute('visible', false);
-        cargoShipB.setAttribute('visible', false);
-        cargoShipC.setAttribute('visible', true);
-
         //set the gameStarted variable to true
         CONTEXT.data.gameStarted = true;
 
@@ -77,20 +64,6 @@ AFRAME.registerComponent('game-manager', {
     },
 
     competitiveInit: function () {
-        const CONTEXT = this;
-        //get the cargo ships
-        const cargoShipA = document.querySelector('#cargoShipA');
-        const cargoShipB = document.querySelector('#cargoShipB');
-        const cargoShipC = document.querySelector('#cargoShipC');
-        //set rotation of crane dependent dropoff zones (a range where the player can drop off cargo)
-        CONTEXT.data.shipDropoffRotation1 = {x: -120, y: -90};
-        CONTEXT.data.shipDropoffRotation2 = {x: 60, y: 90};
-
-        //set visibility of cargo ships
-        cargoShipA.setAttribute('visible', true);
-        cargoShipB.setAttribute('visible', true);
-        cargoShipC.setAttribute('visible', false);
-
         //set the gameStarted variable to true
         CONTEXT.data.gameStarted = true;
 
