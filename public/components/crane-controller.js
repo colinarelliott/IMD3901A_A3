@@ -143,7 +143,7 @@ AFRAME.registerComponent('crane-controller', {
                 CONTEXT.data.doOnce = false;
 
                 //change the second player's camera position
-                CONTEXT.camera.setAttribute('position', '-0.75 1.2 1.2');
+                CONTEXT.camera.setAttribute('position', '-0.75 1.2 1.3');
                 CONTEXT.camera.setAttribute('rotation', '0 0 0');
             }
         }
@@ -266,12 +266,12 @@ AFRAME.registerComponent('crane-controller', {
                     break;
                 case 65: //A
                     if (CONTEXT.data.rotation < 120) {
-                        CONTEXT.data.rotation += 1;
+                        CONTEXT.data.rotation += 2;
                     }
                     break;
                 case 37: //LEFT
                     if (CONTEXT.data.rotation < 120) {
-                        CONTEXT.data.rotation += 1;
+                        CONTEXT.data.rotation += 2;
                     }
                     break;
                 case 83: //S
@@ -286,12 +286,12 @@ AFRAME.registerComponent('crane-controller', {
                     break;
                 case 68: //D
                 if (CONTEXT.data.rotation > -30) {
-                    CONTEXT.data.rotation -= 1;
+                    CONTEXT.data.rotation -= 2;
                 }
                     break;
                 case 39: //RIGHT
                     if (CONTEXT.data.rotation > -30) {
-                        CONTEXT.data.rotation -= 1;
+                        CONTEXT.data.rotation -= 2;
                     }
                     break;
                 case 32: //SPACE
