@@ -106,54 +106,52 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
     },
 
     putdown: function (data) {
-        const CONTEXT = this;
-        const craneController = document.querySelector('#craneController').components["crane-controller"]; //get the craneController component
+        const craneController = document.querySelector('[crane-controller]').components["crane-controller"]; //get the craneController component
         const gameManager = document.querySelector('#gameManager').components["game-manager"]; //get the gameManager component
-        CONTEXT.cargoShips = document.querySelectorAll('.cargoShip');
-        let cargoShipID = "";
 
-        //find the container that is currently held by the crane that this player is controlling
-        let containerToPutdown = document.querySelector('#crane-magnet' + craneController.data.craneToControl).getAttribute('id'); //get the id of the container to put down
+        let heldContainers = document.querySelectorAll('.heldContainer');
+
+        let containerToPutdown = null;
+        let cargoShipToTarget = null;
+
+        //loop through all held containers and find the one that is being held by the crane that is trying to put it down
+        for (i=0; i < heldContainers.length; i++) {
+            let hc = heldContainers[i];
+            let hcParent = hc.parentNode;
+            let hcParentID = hcParent.getAttribute('id');
+            if (hcParentID === "crane-magnet1" && data.craneToControl === 1) {
+                containerToPutdown = hc;
+            }
+            if (hcParentID === "crane-magnet2" && data.craneToControl === 2) {
+                containerToPutdown = hc;
+            }
+        }
 
         //put the container down on the nearest cargo ship if it is a competitive game
-        if (gameManager.data.gameType === "competitive") {
-            //find the nearest cargo ship, and put the container down on it
-            let craneMagnet = document.querySelector('#crane-magnet' + data.craneToControl);
-            let craneMagnetPosition = craneMagnet.getAttribute('position');
-            let distancesCargo = [];
-            for (i = 0; i < CONTEXT.cargoShips.length; i++) {
-                let cargoShip = CONTEXT.cargoShips[i];
-                let cargoShipPosition = cargoShip.getAttribute('position');
-                //append distances to a list
-                distancesCargo.push(Math.sqrt(Math.pow((cargoShipPosition.x - craneMagnetPosition.x), 2) + Math.pow((cargoShipPosition.z - craneMagnetPosition.z), 2)));
+        if (gameManager.data.gameType === 'competitive') {
+            if (craneController.data.craneToControl === 1) {
+                cargoShipToTarget = document.querySelector('#cargoShipA');
             }
-            let minDistance = Math.min.apply(Math, distancesCargo); //get the minimum distance 
-            let indexOfMinDistance = distances.indexOf(minDistance); //get the index of the minimum distance
-            let cargoShipToTarget = CONTEXT.cargoShips[indexOfMinDistance]; //get the container that is closest to the crane
 
-            console.log("Putdown executed: |" + container.parentNode.getAttribute('id') + "|" + container.getAttribute('id') + "|");
-
-            //ADD container to the specific cargo ship
-            if (container !== null) {
-                cargoShipToTarget.components["container-holder"].addContainer();
-                containerToPutdown.parentNode.removeChild(containerToPutdown); //remove the container from the crane
+            if (craneController.data.craneToControl === 2) {
+                cargoShipToTarget = document.querySelector('#cargoShipB');
             }
         }
 
         //put the container down on the middle if it is a collaborative game
-        if (gameManager.data.gameType === "collaborative") {
-            let cargoShipToTarget = document.querySelector('#cargoShipC');
-            console.log("Putdown executed: |" + container.parentNode.getAttribute('id') + "|" + container.getAttribute('id') + "|");
-
+        if (gameManager.data.gameType === 'collaborative') {
+            cargoShipToTarget = document.querySelector('#cargoShipC');
             //ADD container to the specific cargo ship
-            if (container !== null) {
-                cargoShipToTarget.components["container-holder"].addContainer();
-                containerToPutdown.parentNode.removeChild(containerToPutdown); //remove the container from the crane
-            }
+        }
+
+        //actually put it on the ship and remove it from the crane
+        if (containerToPutdown !== null) {
+            cargoShipToTarget.components["container-holder"].addContainer();
+            containerToPutdown.parentNode.removeChild(containerToPutdown); //remove the container from the crane
         }
 
         //grab the cargoShipID to be forwarded to the server
-        cargoShipID = cargoShipToTarget.getAttribute('id');
+        let cargoShipID = cargoShipToTarget.getAttribute('id');
 
         //send putdownContainerEvent to server via craneController
         craneController.putdownContainerEvent({
