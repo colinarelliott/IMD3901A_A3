@@ -95,14 +95,14 @@ AFRAME.registerComponent('crane-controller', {
             console.log(data);
 
             //if the event is from crane 1 and this player is controlling crane 2, putdown the container with the other crane
-            if (data.craneNum === 1 && CONTEXT.data.craneToControl === 2 && gameManager.data.crane1PutdownAllowed === true) {
+            if (data.craneNum === 1 && CONTEXT.data.craneToControl === 2) {
                 pickupContainer.putdownSpecified( {
                     containerID: data.containerID,
                     cargoShipID: data.cargoShipID,
                 });
             }
             //if the event is from crane 2 and this player is controlling crane 1, putdown the container with the other crane
-            if (data.craneNum === 2 && CONTEXT.data.craneToControl === 1 && gameManager.data.crane2PutdownAllowed === true) {
+            if (data.craneNum === 2 && CONTEXT.data.craneToControl === 1) {
                 pickupContainer.putdownSpecified( {
                     containerID: data.containerID,
                     cargoShipID: data.cargoShipID,
@@ -309,12 +309,17 @@ AFRAME.registerComponent('crane-controller', {
     onKeyup: function(evt) {
         const CONTEXT = this;
         const pickupContainer = document.querySelector('[pickupContainer]').components.pickupContainer;
+        const gameManager = document.querySelector('[game-manager]').components.gameManager;
         switch(evt.keyCode) { 
             case 32: //SPACE
                 //animate the magnet back up to 82
                 CONTEXT.data.magnetPosY = 82;
-                //call pickupContainer in pickupContainer.js
-                pickupContainer.pickup(CONTEXT.data);
+                //call pickup or putdown function depending on which is allowed and conditional to the craneToControl
+                if (gameManager.data.crane1PickupAllowed && CONTEXT.data.craneToControl === 1 || gameManager.data.crane2PickupAllowed && CONTEXT.data.craneToControl === 2) {
+                    pickupContainer.pickup(CONTEXT.data);
+                } else if (gameManager.data.crane1PutdownAllowed && CONTEXT.data.craneToControl === 1 || gameManager.data.crane2PutdownAllowed && CONTEXT.data.craneToControl === 2) {
+                    pickupContainer.putdown(CONTEXT.data);
+                }
                 break;
             default:
                 //do nothing if the key pressed is not one of the above
