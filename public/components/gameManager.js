@@ -1,5 +1,6 @@
 AFRAME.registerComponent('game-manager', { 
     schema: {
+        //all of these variables are shared between the two clients
         gameStarted: {type: 'boolean', default: false},
         gameType: {type: 'string', oneOf: 'collaborative, competitive', default: 'collaborative'},
         crane1Dock: {type: 'vec2', default: {x: -210, y: -180}},
@@ -8,12 +9,24 @@ AFRAME.registerComponent('game-manager', {
         crane2Center: {type: 'vec2', default: {x: 60, y: 105}},
         crane1PutdownAllowed: {type: 'boolean', default: false},
         crane2PutdownAllowed: {type: 'boolean', default: false},
-        crane1PickupAllowed: {type: 'boolean', default: false},
-        crane2PickupAllowed: {type: 'boolean', default: false},
+        crane1PickupAllowed: {type: 'boolean', default: true},
+        crane2PickupAllowed: {type: 'boolean', default: true},
     },
     init: function () {
         console.log("gameManager component initialized");
         const CONTEXT = this;
+        setTimeout( function() { // after 200ms, grab the craneController component (give it time to load) and then set up the socket events for syncing data
+            const craneController = document.querySelector('[crane-controller]').components['crane-controller'];
+
+            setInterval( function() {
+                craneController.socket.emit('syncGameManager', CONTEXT.data);
+            }, 50);
+
+            //RECEIVE SYNC EVENT
+            craneController.socket.addEventListener('syncGameManager', (data) => {
+                CONTEXT.data = data;
+            });
+        }, 200);
         //bind functions to the context of the component
         CONTEXT.collaborativeInit = CONTEXT.collaborativeInit.bind(CONTEXT);
         CONTEXT.competitiveInit = CONTEXT.competitiveInit.bind(CONTEXT);
@@ -40,7 +53,6 @@ AFRAME.registerComponent('game-manager', {
         if (CONTEXT.data.gameType === 'competitive') {
             CONTEXT.competitiveInit();
         }
-
     },
 
     collaborativeInit: function () {
