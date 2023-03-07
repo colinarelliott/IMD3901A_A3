@@ -214,22 +214,18 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
         //if the crane is crane 1 and pickup is allowed
         if (craneController.data.craneToControl === 1 && CONTEXT.data.pickupAllowed === true) {
             gameManager.data.crane1PickupAllowed = true; //set the crane1PickupAllowed to true in the gameManager
-            gameManager.data.crane1PutdownAllowed = false; //set the crane1PutdownAllowed to false in the gameManager
         }
         //if the crane is crane 2 and pickup is allowed
         if (craneController.data.craneToControl === 2 && CONTEXT.data.pickupAllowed === true) {
             gameManager.data.crane2PickupAllowed = true; //set the crane2PickupAllowed to true in the gameManager
-            gameManager.data.crane2PutdownAllowed = false; //set the crane2PutdownAllowed to false in the gameManager
         }
         //if the crane is crane 1 and pickup is not allowed
         if (craneController.data.craneToControl === 1 && CONTEXT.data.pickupAllowed === false) {
             gameManager.data.crane1PickupAllowed = false; //set the crane1PickupAllowed to false in the gameManager
-            gameManager.data.crane1PutdownAllowed = true; //set the crane1PutdownAllowed to true in the gameManager
         }
         //if the crane is crane 2 and pickup is not allowed
         if (craneController.data.craneToControl === 2 && CONTEXT.data.pickupAllowed === false) {
             gameManager.data.crane2PickupAllowed = false; //set the crane2PickupAllowed to false in the gameManager
-            gameManager.data.crane2PutdownAllowed = true; //set the crane2PutdownAllowed to true in the gameManager
         }
     }
 });
