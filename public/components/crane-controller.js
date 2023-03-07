@@ -45,10 +45,10 @@ AFRAME.registerComponent('crane-controller', {
             CONTEXT.socket.once('welcome', (playerCount) => {
                 console.log("You are player " + playerCount);
                 //create and append the player number text to the camera
-                var playerNumberText = document.createElement('a-entity');
+                let playerNumberText = document.createElement('a-entity');
                 playerNumberText.setAttribute('id', 'playerNumberText');
-                playerNumberText.setAttribute('position', '0 0.7 -1');
-                playerNumberText.setAttribute('text', 'value: Player ' + playerCount + '; color: white; align: center; width: 1.5');
+                playerNumberText.setAttribute('position', '-0.07 0.075 -0.1');
+                playerNumberText.setAttribute('text', 'value: P' + playerCount + '; color: white; align: center; width: 0.2');
                 CONTEXT.camera.appendChild(playerNumberText);
                 CONTEXT.data.craneToControl = playerCount;
                 console.log("You are controlling crane " + CONTEXT.data.craneToControl); 
@@ -71,8 +71,6 @@ AFRAME.registerComponent('crane-controller', {
 
         //receive the pickupContainer event from the server
         CONTEXT.socket.on('pickupContainer', (data) => {
-            console.log("pickupContainer event received from server");
-            console.log(data);
 
             //if the event is from crane 1 and this player is controlling crane 2, pickup the container with the other crane
             if (data.magnetNumber === 1 && CONTEXT.data.craneToControl === 2) {
