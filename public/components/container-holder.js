@@ -5,23 +5,24 @@ AFRAME.registerComponent('container-holder', {
 
     init : function () {
         const CONTEXT = this;
+        const craneController = document.querySelector('[crane-controller]').components['crane-controller'];
         CONTEXT.data.containerCount = 0;
         CONTEXT.addContainer = CONTEXT.addContainer.bind(CONTEXT);
         CONTEXT.removeContainer = CONTEXT.removeContainer.bind(CONTEXT);
         CONTEXT.updateServer = CONTEXT.updateServer.bind(CONTEXT);
 
         //update the containerCount across all clients for this cargo ship
-        CONTEXT.el.addEventListener('updateContainerCount', function (event) {
-            if (event.detail.cargoShipId === CONTEXT.el.id) {
-                CONTEXT.data.containerCount = event.detail.containerCount;
+        craneController.socket.addEventListener('updateContainerCount', function (event) {
+            if (event.cargoShipId === CONTEXT.el.id) {
+                CONTEXT.data.containerCount = event.containerCount;
             }
         });
-
         setInterval(CONTEXT.updateServer, 100);
     },
 
     tick: function () {
         const CONTEXT = this;
+        /*
         //get all the children of the cargo ship
         let children = CONTEXT.el.children;
         //loop through the children
@@ -30,7 +31,7 @@ AFRAME.registerComponent('container-holder', {
             children[i].setAttribute('visible', true);
             //set the position of the containers on the ship
             children[i].setAttribute('position', {x: 0, y: 0.5, z: 0});
-        }
+        }*/
     },
 
     updateServer: function () {
