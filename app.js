@@ -41,20 +41,24 @@ io.on('connection', (socket) => {
     socket.on('pickupContainer', (data) => {
         socket.broadcast.emit('pickupContainer', data);
         console.log('pickupContainer event received at server');
-        console.log(data);
     });
 
     //PUTDOWN CONTAINER EVENT
     socket.on('putdownContainer', (data) => {
         socket.broadcast.emit('putdownContainer', data);
         console.log('putdownContainer event received at server');
-        console.log(data);
     });
 
     //UPDATE CONTAINER COUNT EVENT
     socket.on('updateContainerCount', (data) => {
         socket.broadcast.emit('updateContainerCount', data);
-        console.log('updateContainerCount event received at server');
+        //console.log('updateContainerCount event received at server');
+    });
+
+    //SYNC GAME MANAGERS EVENT
+    socket.on('syncGameManager', (data) => {
+        socket.broadcast.emit('syncGameManager', data);
+        //console.log('syncGameManager event received at server');
         console.log(data);
     });
 
