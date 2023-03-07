@@ -2,7 +2,7 @@ AFRAME.registerComponent('game-manager', {
     schema: {
         //all of these variables are shared between the two clients
         gameStarted: {type: 'boolean', default: false},
-        gameType: {type: 'string', oneOf: 'collaborative, competitive', default: 'collaborative'},
+        gameType: {type: 'string', oneOf: 'collaborative, competitive', default: 'competitive'},
         crane1Dock: {type: 'vec2', default: {x: -210, y: -180}},
         crane2Dock: {type: 'vec2', default: {x: -30, y: 0}},
         crane1Center: {type: 'vec2', default: {x: -110, y: -75}},
@@ -60,10 +60,11 @@ AFRAME.registerComponent('game-manager', {
         //set the gameStarted variable to true
         CONTEXT.data.gameStarted = true;
 
-        CONTEXT.spawnContainers("competitive");
+        CONTEXT.spawnContainers("collaborative");
     },
 
     competitiveInit: function () {
+        const CONTEXT = this;
         //set the gameStarted variable to true
         CONTEXT.data.gameStarted = true;
 
@@ -74,11 +75,12 @@ AFRAME.registerComponent('game-manager', {
         const CONTEXT = this;
         const scene = document.querySelector('#scene');
         if (gameType === 'collaborative') {
+            //SHIP A CONTAINERS
             for (let i = 0; i < 5; i++) {
                 const container = document.createElement('a-entity');
                 container.setAttribute('id', 'container' + i*(Math.floor((Math.random() * (1000)) + 1))); //give the container a random id
                 container.setAttribute('class', 'shippingContainer');
-                container.setAttribute('position', {x: -0.5+(i*-0.1), y: 0.75, z: -0.2});
+                container.setAttribute('position', {x: -0.7+(i*-0.1), y: 0.8, z: -0.1});
                 container.setAttribute('rotation', {x: 0, y: 0, z: 0});
                 container.setAttribute('scale', {x: 0.02, y: 0.02, z: 0.02});
                 container.setAttribute('gltf-model', '#blue-container-model');
@@ -86,11 +88,12 @@ AFRAME.registerComponent('game-manager', {
                 scene.appendChild(container);
             }
 
+            //SHIP B CONTAINERS
             for (let i = 0; i < 5; i++) {
                 const container = document.createElement('a-entity');
                 container.setAttribute('id', 'container' + i*(Math.floor((Math.random() * (1000)) + 1))); //give the container a random id
                 container.setAttribute('class', 'shippingContainer');
-                container.setAttribute('position', {x: -0.5+(i*-0.1), y: 0.75, z: 0.9});
+                container.setAttribute('position', {x: -0.7+(i*-0.1), y: 0.75, z: 1});
                 container.setAttribute('rotation', {x: 0, y: 0, z: 0});
                 container.setAttribute('scale', {x: 0.02, y: 0.02, z: 0.02});
                 container.setAttribute('gltf-model', '#blue-container-model');
@@ -98,12 +101,13 @@ AFRAME.registerComponent('game-manager', {
                 scene.appendChild(container);
             }
         }
+        //SHIP C CONTAINERS
         if (gameType === 'competitive') {
             for (let i=0; i < 5; i++) {
                 const container = document.createElement('a-entity');
                 container.setAttribute('id', 'container' + i*(Math.floor((Math.random() * (1000)) + 1))); //give the container a random id
                 container.setAttribute('class', 'shippingContainer');
-                container.setAttribute('position', {x: -0.4+(i*-0.1), y: 0.85, z: 0.4});
+                container.setAttribute('position', {x: -0.4+(i*-0.1), y: 0.85, z: 0.43});
                 container.setAttribute('rotation', {x: 0, y: 0, z: 0});
                 container.setAttribute('scale', {x: 0.02, y: 0.02, z: 0.02});
                 container.setAttribute('gltf-model', '#blue-container-model');
@@ -128,31 +132,31 @@ AFRAME.registerComponent('game-manager', {
                 if (craneController.data.craneToControl === 1) {
                     //if the crane is in the dropoff zone, allow the player to drop off cargo
                     if (CONTEXT.data.crane1Dock.x < craneController.data.rotation && CONTEXT.data.crane1Dock.y > craneController.data.rotation) {
-                        CONTEXT.data.crane1PutdownAllowed = true;
+                        CONTEXT.data.crane1PickupAllowed = true;
                     } else {
-                        CONTEXT.data.crane1PutdownAllowed = false; //if it's not in the dropoff zone, no putdown is allowed
+                        CONTEXT.data.crane1PickupAllowed = false; //if it's not in the dropoff zone, no putdown is allowed
                     }
                     //if the crane is in the pickup zone, allow the player to pick up cargo
                     if (CONTEXT.data.crane1Center.x < craneController.data.rotation && CONTEXT.data.crane1Center.y > craneController.data.rotation) {
-                        CONTEXT.data.crane1PickupAllowed = true;
+                        CONTEXT.data.crane1PutdownAllowed = true;
                     } else {
-                        CONTEXT.data.crane1PickupAllowed = false; //if it's not in the pickup zone, no pickup is allowed
+                        CONTEXT.data.crane1PutdownAllowed = false; //if it's not in the pickup zone, no pickup is allowed
                     }
                 }
 
                 if (craneController.data.craneToControl === 2) {
                     //if the crane is in the dropoff zone, allow the player to drop off cargo
                     if (CONTEXT.data.crane2Dock.x < craneController.data.rotation && CONTEXT.data.crane2Dock.y > craneController.data.rotation) {
-                        CONTEXT.data.crane2PutdownAllowed = true;
+                        CONTEXT.data.crane2PickupAllowed = true;
                     } else {
-                        CONTEXT.data.crane2PutdownAllowed = false; //if it's not in the dropoff zone, no putdown is allowed
+                        CONTEXT.data.crane2PickupAllowed = false; //if it's not in the dropoff zone, no putdown is allowed
                     }
 
                     //if the crane is in the pickup zone, allow the player to pick up cargo
                     if (CONTEXT.data.crane2Center.x < craneController.data.rotation && CONTEXT.data.crane2Center.y > craneController.data.rotation) {
-                        CONTEXT.data.crane2PickupAllowed = true;
+                        CONTEXT.data.crane2PutdownAllowed = true;
                     } else {
-                        CONTEXT.data.crane2PickupAllowed = false; //if it's not in the pickup zone, no pickup is allowed
+                        CONTEXT.data.crane2PutdownAllowed = false; //if it's not in the pickup zone, no pickup is allowed
                     }
                 }
             }
@@ -163,15 +167,15 @@ AFRAME.registerComponent('game-manager', {
                 if(craneController.data.craneToControl === 1) {
                     //if the crane is in the dropoff zone, allow the player to drop off cargo
                     if (CONTEXT.data.crane1Center.x < craneController.data.rotation && CONTEXT.data.crane1Center.y > craneController.data.rotation) {
-                        CONTEXT.data.crane1PutdownAllowed = true;
+                        CONTEXT.data.crane1PickupAllowed = true;
                     } else {
-                        CONTEXT.data.crane1PutdownAllowed = false; //if it's not in the dropoff zone, no putdown is allowed
+                        CONTEXT.data.crane1PickupAllowed = false; //if it's not in the dropoff zone, no putdown is allowed
                     }
                     //if the crane is in the pickup zone, allow the player to pick up cargo
                     if (CONTEXT.data.crane1Dock.x < craneController.data.rotation && CONTEXT.data.crane1Dock.y > craneController.data.rotation) {
-                        CONTEXT.data.crane1PickupAllowed = true;
+                        CONTEXT.data.crane1PutdownAllowed = true;
                     } else {
-                        CONTEXT.data.crane1PickupAllowed = false; //if it's not in the pickup zone, no pickup is allowed
+                        CONTEXT.data.crane1PutdownAllowed = false; //if it's not in the pickup zone, no pickup is allowed
                     }
                 }
 
@@ -179,15 +183,15 @@ AFRAME.registerComponent('game-manager', {
                 if (craneController.data.craneToControl === 2) {
                     //if the crane is in the dropoff zone, allow the player to drop off cargo
                     if (CONTEXT.data.crane2Center.x < craneController.data.rotation && CONTEXT.data.crane2Center.y > craneController.data.rotation) {
-                        CONTEXT.data.crane2PutdownAllowed = true;
+                        CONTEXT.data.crane2PickupAllowed = true;
                     } else {
-                        CONTEXT.data.crane2PutdownAllowed = false; //if it's not in the dropoff zone, no putdown is allowed
+                        CONTEXT.data.crane2PickupAllowed = false; //if it's not in the dropoff zone, no putdown is allowed
                     }
                     //if the crane is in the pickup zone, allow the player to pick up cargo
                     if (CONTEXT.data.crane2Dock.x < craneController.data.rotation && CONTEXT.data.crane2Dock.y > craneController.data.rotation) {
-                        CONTEXT.data.crane2PickupAllowed = true;
+                        CONTEXT.data.crane2PutdownAllowed = true;
                     } else {
-                        CONTEXT.data.crane2PickupAllowed = false; //if it's not in the pickup zone, no pickup is allowed
+                        CONTEXT.data.crane2PutdownAllowed = false; //if it's not in the pickup zone, no pickup is allowed
                     }
                 }
             }
