@@ -166,7 +166,7 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
                 cargoShipID: cargoShipID,
             });
             setTimeout(function () {
-                cargoShipToTarget.components["container-holder"].addContainer();
+                cargoShipToTarget.components["container-holder"].addContainer(containerToPutdown);
                 containerToPutdown.parentNode.removeChild(containerToPutdown); //remove the container from the crane
                 console.log("container put down complete");
             }, 10); //10ms later to make sure it happens after the server is sent the event
@@ -182,7 +182,7 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
 
         //ADD container to the specific cargo ship
         if (container !== null) {
-            containerHolder.addContainer();
+            containerHolder.addContainer(container);
             container.parentNode.removeChild(container); //remove the container from the crane
         }
     },
