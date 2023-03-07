@@ -26,12 +26,7 @@
                 <a-asset id="crane-model" src="assets/models/crane.gltf"></a-asset>
                 <!--This work is based on "Shipping containers" (https://sketchfab.com/3d-models/shipping-containers-cc3f7136710f4905905eae1d10ac50b7) by Mateusz Woliński (https://sketchfab.com/jeandiz) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)-->
                 <a-asset id="blue-container-model" src="assets/models/blue-container.gltf"></a-asset>
-
                 <a-asset id="cargoShip-model" src="assets/models/low_poly_cargo_ship.glb"></a-asset>
-
-                <!--Textures-->
-                <!--https://www.freepik.com/free-photo/old-cement-wall-texture_920589.htm#query=concrete%20texture%20floor&position=0&from_view=search&track=ais Image by asierromero on Freepik -->
-                <img id="concrete-texture" src="assets/textures/concrete.jpg" crossorigin="anonymous">
             </a-assets>
 
             <a-entity id="gameManager" game-manager></a-entity>
@@ -56,10 +51,9 @@
 
             <a-entity 
                 id="camera"
-                camera 
+                camera=""
                 look-controls 
                 position="-0.8 1.2 -0.5"
-                rotation="0 90 0"
             ></a-entity>
 
             <!--geometry-->
@@ -144,16 +138,6 @@
                     ></a-entity>
                 </a-entity>
             </a-entity>
-
-            <!-- commenting this out because I need it for reference
-            <a-entity 
-                id="blue-container"
-                class="shippingContainer"
-                gltf-model="#blue-container-model"
-                position="-0.65 0.8 0.5"
-                scale="0.02 0.02 0.02"
-                shadow
-            ></a-entity> all containers will be spawned in by the gameManager  -->
 
              <!--Cargoship models A&B are for competitive mode-->
              <a-entity
