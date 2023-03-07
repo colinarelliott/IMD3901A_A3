@@ -5,6 +5,7 @@ AFRAME.registerComponent('crane-controller', {
     //required components
     dependencies: ['pickupContainer'],
     schema: {
+        //the variables in here are specific to each player
         craneToControl: {type: 'number', default: 1}, //the crane that this player controls
         rotation: {type: 'number', default: -120}, //the rotation of the crane
         magnetPosX: {type: 'number', default: 65}, //the x position of the magnet (relative, parented to the crane)
@@ -18,6 +19,7 @@ AFRAME.registerComponent('crane-controller', {
         console.log("crane-controller component initialized");
         const CONTEXT = this;
         const pickupContainer = CONTEXT.el.components['pickupContainer']; //get the pickupContainer component
+        const gameManager = document.querySelector('[game-manager]').components['game-manager']; //get the gameManager component
         CONTEXT.camera = document.querySelector('#camera'); //get the camera
         //bind the functions to the context of the component
         CONTEXT.onKeydown = CONTEXT.onKeydown.bind(CONTEXT); //this function will be executed on keydown
@@ -73,14 +75,14 @@ AFRAME.registerComponent('crane-controller', {
             console.log(data);
 
             //if the event is from crane 1 and this player is controlling crane 2, pickup the container with the other crane
-            if (data.magnetNumber === 1 && CONTEXT.data.craneToControl === 2) {
+            if (data.magnetNumber === 1 && CONTEXT.data.craneToControl === 2 && gameManager.data.crane1PickupAllowed === true) {
                 pickupContainer.pickupSpecified( {
                     craneNum: data.magnetNumber,
                     containerID: data.containerToPickup,
                 });
             }
             //if the event is from crane 2 and this player is controlling crane 1, pickup the container with the other crane
-            if (data.magnetNumber === 2 && CONTEXT.data.craneToControl === 1) {
+            if (data.magnetNumber === 2 && CONTEXT.data.craneToControl === 1 && gameManager.data.crane2PickupAllowed === true) {
                 pickupContainer.pickupSpecified( {
                     craneNum: data.magnetNumber,
                     containerID: data.containerToPickup,
@@ -93,14 +95,14 @@ AFRAME.registerComponent('crane-controller', {
             console.log(data);
 
             //if the event is from crane 1 and this player is controlling crane 2, putdown the container with the other crane
-            if (data.craneNum === 1 && CONTEXT.data.craneToControl === 2) {
+            if (data.craneNum === 1 && CONTEXT.data.craneToControl === 2 && gameManager.data.crane1PutdownAllowed === true) {
                 pickupContainer.putdownSpecified( {
                     containerID: data.containerID,
                     cargoShipID: data.cargoShipID,
                 });
             }
             //if the event is from crane 2 and this player is controlling crane 1, putdown the container with the other crane
-            if (data.craneNum === 2 && CONTEXT.data.craneToControl === 1) {
+            if (data.craneNum === 2 && CONTEXT.data.craneToControl === 1 && gameManager.data.crane2PutdownAllowed === true) {
                 pickupContainer.putdownSpecified( {
                     containerID: data.containerID,
                     cargoShipID: data.cargoShipID,
@@ -113,7 +115,7 @@ AFRAME.registerComponent('crane-controller', {
         setInterval(function() {
             //update the crane's position to the server
             CONTEXT.socket.emit('updateCrane', CONTEXT.data);
-        }, 50); //update the crane's position every 5ms
+        }, 50); //update the crane's position every 50ms
 
     },
 
