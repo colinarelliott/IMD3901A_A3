@@ -59,7 +59,11 @@ io.on('connection', (socket) => {
     socket.on('syncGameManager', (data) => {
         socket.broadcast.emit('syncGameManager', data);
         //console.log('syncGameManager event received at server');
-        console.log(data);
+        //console.log(data);
+    });
+
+    socket.on('startGame', (data) => {
+        socket.broadcast.emit('startGame', data);
     });
 
     //END CUSTOM EVENTS
