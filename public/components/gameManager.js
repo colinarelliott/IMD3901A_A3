@@ -18,7 +18,6 @@ AFRAME.registerComponent('game-manager', {
         doOnce: {type: 'boolean', default: true},
     },
     init: function () {
-        console.log("gameManager component initialized");
         const CONTEXT = this;
         CONTEXT.startTimer = CONTEXT.startTimer.bind(CONTEXT);
         CONTEXT.stopTimer = CONTEXT.stopTimer.bind(CONTEXT);
@@ -176,6 +175,7 @@ AFRAME.registerComponent('game-manager', {
         }, 200);
     },
 
+    //timer for collaborative game
     startTimer: function() {
         const CONTEXT = this;
         setInterval( function() {
@@ -193,6 +193,7 @@ AFRAME.registerComponent('game-manager', {
         document.querySelector('#camera').appendChild(timerText); //add timerText element to the camera
     },
 
+    //stop the timer and return the value`
     stopTimer: function() {
         const CONTEXT = this;
         CONTEXT.data.timerStarted = false;
