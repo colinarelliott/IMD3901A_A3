@@ -13,6 +13,7 @@ AFRAME.registerComponent('container-holder', { //this component is attached to t
         CONTEXT.removeContainer = CONTEXT.removeContainer.bind(CONTEXT);
         CONTEXT.updateServer = CONTEXT.updateServer.bind(CONTEXT);
         CONTEXT.containerStateChange = CONTEXT.containerStateChange.bind(CONTEXT);
+        CONTEXT.firstContainerSpawns = CONTEXT.firstContainerSpawns.bind(CONTEXT);
 
         //update the containerCount across all clients for this cargo ship
         craneController.socket.addEventListener('updateContainerCount', function (event) {
@@ -20,50 +21,17 @@ AFRAME.registerComponent('container-holder', { //this component is attached to t
                 CONTEXT.data.containerCount = event.containerCount;
             }
         });
-        setInterval(CONTEXT.updateServer, 100);
 
-        //get the three cargo ships
-        let cargoShipA = document.querySelector('#cargoShipA');
-        let cargoShipB = document.querySelector('#cargoShipB');
-        let cargoShipC = document.querySelector('#cargoShipC');
-
-        //set the container count for each cargo ship based on the game type
-        if (gameManager.data.gameType === "collaborative") {
-            if (CONTEXT.el.id === cargoShipA.id) {
-                CONTEXT.data.containerCount = 5;
-            }
-            if (CONTEXT.el.id === cargoShipB.id) {
-                CONTEXT.data.containerCount = 5;
-            }
-            if (CONTEXT.el.id === cargoShipC.id) {
-                CONTEXT.data.containerCount = 0;
-            }
-        } else { //if the game is competitive
-            if (CONTEXT.el.id === cargoShipA.id) {
-                CONTEXT.data.containerCount = 0;
-            }
-            if (CONTEXT.el.id === cargoShipB.id) {
-                CONTEXT.data.containerCount = 0;
-            }
-            if (CONTEXT.el.id === cargoShipC.id) {
-                CONTEXT.data.containerCount = 5;
-            }
-        }
-
-        CONTEXT.containerStateChange();
-
-        //after the first state change, add the shippingContainer class to all containers
-        let addPickupFlag = document.querySelectorAll('.onCargoShip');
-
-        for (i=0; i<addPickupFlag.length; i++) {
-            let c = addPickupFlag[i];
-            c.setAttribute('class', 'shippingContainer');
-        }
+        setInterval(CONTEXT.updateServer, 50); //update the server every 50ms
     },
 
     containerStateChange: function () {
         const CONTEXT = this;
         let destroyAllContainers = document.querySelector('.shippingContainer');
+
+        let cargoShipA = document.querySelector('#cargoShipA');
+        let cargoShipB = document.querySelector('#cargoShipB');
+        let cargoShipC = document.querySelector('#cargoShipC');
 
         if (destroyAllContainers !== null) { //if there are containers in the scene
             for (let i = 0; i < destroyAllContainers.length; i++) {
@@ -117,6 +85,7 @@ AFRAME.registerComponent('container-holder', { //this component is attached to t
                 CONTEXT.data.containers.push(container); //add each container to the array local to it's cargo ship
             }
         }
+        console.log("Container state changed");
     },
 
     updateServer: function () {
@@ -151,5 +120,49 @@ AFRAME.registerComponent('container-holder', { //this component is attached to t
         }
         
         CONTEXT.containerStateChange();
-    }
+    },
+
+    firstContainerSpawns: function () {
+        const CONTEXT = this;
+        gameManager = document.querySelector('[game-manager]').components['game-manager'];
+
+        //get the three cargo ships
+        let cargoShipA = document.querySelector('#cargoShipA');
+        let cargoShipB = document.querySelector('#cargoShipB');
+        let cargoShipC = document.querySelector('#cargoShipC');
+
+        //set the container count for each cargo ship based on the game type
+        if (gameManager.data.gameType === "collaborative") {
+            if (CONTEXT.el.id === cargoShipA.id) {
+                CONTEXT.data.containerCount = 5;
+            }
+            if (CONTEXT.el.id === cargoShipB.id) {
+                CONTEXT.data.containerCount = 5;
+            }
+            if (CONTEXT.el.id === cargoShipC.id) {
+                CONTEXT.data.containerCount = 0;
+            }
+        } else { //if the game is competitive
+            if (CONTEXT.el.id === cargoShipA.id) {
+                CONTEXT.data.containerCount = 0;
+            }
+            if (CONTEXT.el.id === cargoShipB.id) {
+                CONTEXT.data.containerCount = 0;
+            }
+            if (CONTEXT.el.id === cargoShipC.id) {
+                CONTEXT.data.containerCount = 5;
+            }
+        }
+        console.log("firstContainerSpawns called");
+        CONTEXT.containerStateChange(); //call the containerStateChange function after 100ms
+
+        let addPickupFlag = document.querySelectorAll('.onCargoShip');
+
+        if (addPickupFlag !== null) {
+            for (i=0; i<addPickupFlag.length; i++) {
+                let c = addPickupFlag[i];
+                c.setAttribute('class', 'shippingContainer');
+            }
+        }
+    },
 });
