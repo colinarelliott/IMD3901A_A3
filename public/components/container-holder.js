@@ -85,7 +85,6 @@ AFRAME.registerComponent('container-holder', { //this component is attached to t
                 CONTEXT.data.containers.push(container); //add each container to the array local to it's cargo ship
             }
         }
-        console.log("Container state changed");
     },
 
     updateServer: function () {
@@ -151,7 +150,6 @@ AFRAME.registerComponent('container-holder', { //this component is attached to t
                 CONTEXT.data.containerCount = 5;
             }
         }
-        console.log("firstContainerSpawns called");
         CONTEXT.containerStateChange(); //call the containerStateChange function after 100ms
 
         let addPickupFlag = document.querySelectorAll('.onCargoShip');

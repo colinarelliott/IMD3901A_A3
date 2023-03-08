@@ -8,7 +8,6 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
         cargoShips: {type: 'selectorAll', default: '.cargoShip'},
     },
     init: function () {
-        console.log("pickupContainer component initialized");
         const CONTEXT = this;
         CONTEXT.pickup = CONTEXT.pickup.bind(CONTEXT);
         CONTEXT.putdown = CONTEXT.putdown.bind(CONTEXT);
@@ -45,9 +44,6 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
             //ACTUALLY PICKUP THE CONTAINER
             let container = document.querySelector('#' + containerID);
             let magnet = document.querySelector('#crane-magnet' + magnetNumber);
-
-            //DEBUG
-            console.log("Pickup executed: |" +magnetNumber+"|"+containerID+"|");
             let copy = container.cloneNode(true);
             //parent the copy to the magnet
             magnet.appendChild(copy);
@@ -86,7 +82,6 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
         magnet.appendChild(copy);
         //remove the original container
         container.parentNode.removeChild(container);
-        console.log("Specific pickup executed: |" + data.craneNum + "|" + data.containerID + "|");
         // END PICKUP
 
         setTimeout(function () { //reset the copy's position, rotation, and scale, give it the new class and model reference
@@ -109,8 +104,6 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
         const craneController = document.querySelector('[crane-controller]').components["crane-controller"]; //get the craneController component
         const gameManager = document.querySelector('#gameManager').components["game-manager"]; //get the gameManager component
 
-        console.log("putdown executed by P" + data.craneToControl);
-
         let heldContainers = document.querySelectorAll('.heldContainer');
 
         let containerToPutdown = null;
@@ -129,8 +122,6 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
             }
         }
 
-        console.log("containerToPutdown: " + containerToPutdown.getAttribute('id'));
-
         //put the container down on the nearest cargo ship if it is a competitive game
         if (gameManager.data.gameType === 'competitive') {
             if (craneController.data.craneToControl === 1) {
@@ -148,8 +139,6 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
             //ADD container to the specific cargo ship
         }
 
-        console.log("cargoShipToTarget: " + cargoShipToTarget.getAttribute('id'));
-
         //grab the cargoShipID to be forwarded to the server
         let cargoShipID = cargoShipToTarget.getAttribute('id');
 
@@ -163,7 +152,6 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
             setTimeout(function () {
                 cargoShipToTarget.components["container-holder"].addContainer(containerToPutdown);
                 containerToPutdown.parentNode.removeChild(containerToPutdown); //remove the container from the crane
-                console.log("container put down complete");
             }, 10); //10ms later to make sure it happens after the server is sent the event
         }
     },
@@ -174,7 +162,6 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
         let cargoShip = document.querySelector('#' + cargoShipID);
         let containerHolder = cargoShip.components["container-holder"];
         let container = document.querySelector('#' + data.containerID);
-        console.log("Specific putdown executed: |" + data.containerID + "|");
 
         //ADD container to the specific cargo ship
         if (container !== null) {

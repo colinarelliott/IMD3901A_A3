@@ -16,7 +16,6 @@ AFRAME.registerComponent('crane-controller', {
         doOnce: {type: 'boolean', default: true}, //a boolean that is used to only run specific code in the tick function once
     },
     init: function () {
-        console.log("crane-controller component initialized");
         const CONTEXT = this;
         const pickupContainer = CONTEXT.el.components['pickupContainer']; //get the pickupContainer component
         const gameManager = document.querySelector('[game-manager]').components['game-manager']; //get the gameManager component
@@ -89,9 +88,6 @@ AFRAME.registerComponent('crane-controller', {
         });
 
         CONTEXT.socket.on('putdownContainer', (data) => {
-            console.log("putdownContainer event received from server");
-            console.log(data);
-
             //if the event is from crane 1 and this player is controlling crane 2, putdown the container with the other crane
             if (data.craneNum === 1 && CONTEXT.data.craneToControl === 2) {
                 pickupContainer.putdownSpecified( {
@@ -107,8 +103,7 @@ AFRAME.registerComponent('crane-controller', {
 
             });
             }
-        });
-                
+        });   
 
         setInterval(function() {
             //update the crane's position to the server
@@ -189,15 +184,12 @@ AFRAME.registerComponent('crane-controller', {
             color: 'black', 
             opacity: 1
         });
-
-        //console.log("Crane " + CONTEXT.data.craneToControl + " rotation: " + CONTEXT.data.rotation);
     },
 
     onKeydown: function(evt) {
         const CONTEXT = this;
         //switch on the keycode, determine correct action and move crane accordingly
         if (CONTEXT.data.craneToControl === 1) {
-            console.log("player1 changing positions");
             switch(evt.keyCode) {
                 case 87: //W
                 if (CONTEXT.data.magnetPosX < 65) {
@@ -250,7 +242,6 @@ AFRAME.registerComponent('crane-controller', {
         }
 
         if (CONTEXT.data.craneToControl === 2) { //if this is player 2, invert the controls
-            console.log("Player 2 changing positions");
             switch(evt.keyCode) {
                 case 87: //W
                 if (CONTEXT.data.magnetPosX < 65) {
