@@ -17,7 +17,6 @@ AFRAME.registerComponent('game-manager', {
         const CONTEXT = this;
         setTimeout( function() { // after 200ms, grab the craneController component (give it time to load) and then set up the socket events for syncing data
             const craneController = document.querySelector('[crane-controller]').components['crane-controller'];
-
             setInterval( function() {
                 craneController.socket.emit('syncGameManager', CONTEXT.data);
             }, 50);
@@ -26,45 +25,121 @@ AFRAME.registerComponent('game-manager', {
             craneController.socket.addEventListener('syncGameManager', (data) => {
                 CONTEXT.data = data;
             });
+
+            //RECEIVE START GAME EVENT
+            craneController.socket.addEventListener('startGame', (data) => {
+                CONTEXT.data.gameType = data.gameType;
+                //set the game started variable
+                CONTEXT.data.gameStarted = true;
+                //call the initial generation of containers function
+                setTimeout( function() { //wait for the data to sync
+                    let CHs = document.querySelectorAll('[container-holder]');
+                    CHs.forEach( function(CH) {
+                        CH.components['container-holder'].firstContainerSpawns();
+                    });
+                }, 100);
+                //remove the menu items
+                p1Text.parentNode.removeChild(p1Text);
+                collaborativeGame.parentNode.removeChild(collaborativeGame);
+                competitiveGame.parentNode.removeChild(competitiveGame);
+            });
+
         }, 200);
-        //bind functions to the context of the component
-        CONTEXT.collaborativeInit = CONTEXT.collaborativeInit.bind(CONTEXT);
-        CONTEXT.competitiveInit = CONTEXT.competitiveInit.bind(CONTEXT);
 
-        CONTEXT.data.gameType = 'collaborative'; //set the game type to collaborative by default
-        
+        //draw the new game screen
+        setTimeout( function() { //wait for craneController to load
+            const craneController = document.querySelector('[crane-controller]').components['crane-controller'];
+            const camera = document.querySelector('#camera');
 
-        //create a UI that prompts the user to choose between collaborative and competitive gamemodes
-        /*
-        const gameTypeUI = document.createElement('a-entity');
-        gameTypeUI.setAttribute('id', 'gameTypeUI');
-        gameTypeUI.setAttribute('position', {x: 0, y: 0, z: 0});
-        gameTypeUI.setAttribute('rotation', {x: 0, y: 0, z: 0});
-        gameTypeUI.setAttribute('scale', {x: 1, y: 1, z: 1});
-        gameTypeUI.setAttribute('geometry', {primitive: 'plane', width: 1, height: 1});
-        gameTypeUI.setAttribute('material', {color: '#000000', opacity: 0.5});
-        gameTypeUI.setAttribute('text', {value: 'Choose a gamemode', align: 'center', width: 1, color: '#ffffff'});
-        CONTEXT.el.appendChild(gameTypeUI);*/
+            if (craneController.data.craneToControl === 1) {
+                //send P1 the new game menu
+                let competitiveGame = document.createElement('a-entity');
+                competitiveGame.setAttribute('id', 'competitiveGame');
+                competitiveGame.setAttribute('class', 'menuItem');
+                competitiveGame.setAttribute('geometry', 'primitive: plane; width: 0.075; height: 0.075');
+                competitiveGame.setAttribute('material', 'color: #006699; transparent: true; opacity: 0.5');
+                competitiveGame.setAttribute('position', '-0.04 0 -0.1');
+                competitiveGame.setAttribute('visible', 'true');
+                competitiveGame.setAttribute('text', 'value: Competitive Game; align: center; color: #ffffff; width: 0.075; height: 0.075; wrapCount: 20; zOffset: 0.01');
+                camera.appendChild(competitiveGame);
 
-        if (CONTEXT.data.gameType === 'collaborative') {
-            CONTEXT.collaborativeInit();
-        } 
-        if (CONTEXT.data.gameType === 'competitive') {
-            CONTEXT.competitiveInit();
-        }
-    },
+                let collaborativeGame = document.createElement('a-entity');
+                collaborativeGame.setAttribute('id', 'collaborativeGame');
+                collaborativeGame.setAttribute('class', 'menuItem');
+                collaborativeGame.setAttribute('geometry', 'primitive: plane; width: 0.075; height: 0.075');
+                collaborativeGame.setAttribute('material', 'color: #669900; transparent: true; opacity: 0.5');
+                collaborativeGame.setAttribute('position', '0.04 0 -0.1');
+                collaborativeGame.setAttribute('visible', 'true');
+                collaborativeGame.setAttribute('text', 'value: Collaborative Game; align: center; color: #ffffff; width: 0.075; height: 0.075; wrapCount: 20; zOffset: 0.01');
+                camera.appendChild(collaborativeGame);
 
-    collaborativeInit: function () {
-        const CONTEXT = this;
-        //set the gameStarted variable to true
-        CONTEXT.data.gameStarted = true;
-    },
+                let p1Text = document.createElement('a-entity');
+                p1Text.setAttribute('id', 'p1Text');
+                p1Text.setAttribute('geometry', 'primitive: plane; width: 0.15; height: 0.025');
+                p1Text.setAttribute('material', 'color: #000000; transparent: true; opacity: 0.5');
+                p1Text.setAttribute('position', '0 0.05 -0.1');
+                p1Text.setAttribute('visible', 'true');
+                p1Text.setAttribute('text', 'value: Welcome to Cargo Cranes. Please click a game type.; align: center; color: #ffffff; width: 0.075; height: 0.0375; wrapCount: 25; zOffset: 0.01');
+                camera.appendChild(p1Text);
 
-    competitiveInit: function () {
-        const CONTEXT = this;
-        //set the gameStarted variable to true
-        CONTEXT.data.gameStarted = true;
+                collaborativeGame.addEventListener('click', function() { //when the player clicks the collaborative game button
+                    //set the game type
+                    CONTEXT.data.gameType = "collaborative";
+                    //set the game started variable
+                    CONTEXT.data.gameStarted = true;
+                    craneController.socket.emit('syncGameManager', CONTEXT.data); //resync the data with the server
+                    //call the initial generation of containers function
+                    setTimeout( function() { //wait for the data to sync
+                        let CHs = document.querySelectorAll('[container-holder]');
+                        CHs.forEach( function(CH) {
+                            CH.components['container-holder'].firstContainerSpawns(); //all container holders will spawn their first containers
+                        });
+                    }, 100);
+                    //remove the menu items
+                    p1Text.parentNode.removeChild(p1Text);
+                    collaborativeGame.parentNode.removeChild(collaborativeGame);
+                    competitiveGame.parentNode.removeChild(competitiveGame);
 
+                    craneController.socket.emit('startGame', {
+                        gameType: CONTEXT.data.gameType
+                    }); //tell the server to start the game
+                });
+
+                competitiveGame.addEventListener('click', function() { //when the player clicks the competitive game button
+                    //set the game type
+                    CONTEXT.data.gameType = "competitive";
+                    //set the game started variable
+                    CONTEXT.data.gameStarted = true;
+                    //call the initial generation of containers function
+                    setTimeout( function() { //wait for the data to sync
+                        let CHs = document.querySelectorAll('[container-holder]');
+                        CHs.forEach( function(CH) {
+                            CH.components['container-holder'].firstContainerSpawns();
+                        });
+                    }, 100);
+                    //remove the menu items
+                    p1Text.parentNode.removeChild(p1Text);
+                    collaborativeGame.parentNode.removeChild(collaborativeGame);
+                    competitiveGame.parentNode.removeChild(competitiveGame);
+
+                    craneController.socket.emit('startGame', {
+                        gameType: CONTEXT.data.gameType
+                    }); //tell the server to start the game
+                });
+            }
+
+            if (craneController.data.craneToControl === 2) { //if the player is crane #2
+                //send P2 the new game menu
+                let p2Text = document.createElement('a-entity');
+                p2Text.setAttribute('id', 'p2Text');
+                p2Text.setAttribute('geometry', 'primitive: plane; width: 0.15; height: 0.025');
+                p2Text.setAttribute('material', 'color: #000000; transparent: true; opacity: 0.5');
+                p2Text.setAttribute('position', '0 0.05 -0.1');
+                p2Text.setAttribute('visible', 'true');
+                p2Text.setAttribute('text', 'value: Waiting for player 1 to select a game type.; align: center; color: #ffffff; width: 0.075; height: 0.0375; wrapCount: 25; zOffset: 0.01');
+                camera.appendChild(p2Text);
+            }
+        }, 200);
     },
 
     tick: function () {
