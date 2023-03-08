@@ -3,6 +3,8 @@
 
 ---
 
+Self Link: https://github.com/colinarelliott/IMD3901A_A3
+
 #### Prompt:
 This repository contains code for an assignment related to one of my university courses. It's an A-Frame NodeJS application. Here's the prompt:
 - "Create a WebXR application that allows two participants to collaborate and compete in an interactive space that includes interaction feedback (e.g., visual, aural, and/or haptic)."
