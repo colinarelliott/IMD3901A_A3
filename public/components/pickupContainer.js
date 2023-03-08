@@ -18,6 +18,7 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
         //TRYING TO FIGURE OUT HOW TO CONSTRICT PICKUP TO ONLY IN VALID ZONES
         const CONTEXT = this;
         const craneController = document.querySelector('[crane-controller]').components['crane-controller']; //get the crane-controller component
+        const gameManager = document.querySelector('#gameManager').components['game-manager']; //get the game-manager component
         CONTEXT.data.containers = document.querySelectorAll('.shippingContainer');
         //add a list for the distances between the crane and the containers
         if (CONTEXT.data.containers.length > 0) {
@@ -45,6 +46,7 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
             //ACTUALLY PICKUP THE CONTAINER
             let container = document.querySelector('#' + containerID);
             let magnet = document.querySelector('#crane-magnet' + magnetNumber);
+
             //DEBUG
             console.log("Pickup executed: |" +magnetNumber+"|"+containerID+"|");
             let copy = container.cloneNode(true);
@@ -63,12 +65,7 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
                 copy.setAttribute('class', 'heldContainer'); //remove class so it doesn't get picked up again
             }, 10);
 
-             /*
-            craneController.pickupContainerEvent({
-                magnetNumber: magnetNumber,
-                containerToPickup: containerID //removed because call stack errors
-            }); */
-
+            //send the pickup event to the server
             craneController.socket.emit('pickupContainer', {
                 magnetNumber: magnetNumber,
                 containerToPickup: containerID
