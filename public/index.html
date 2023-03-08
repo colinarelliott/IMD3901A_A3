@@ -24,26 +24,12 @@
                 <a-asset id="crane-model" src="assets/models/crane.gltf"></a-asset>
                 <!--This work is based on "Shipping containers" (https://sketchfab.com/3d-models/shipping-containers-cc3f7136710f4905905eae1d10ac50b7) by Mateusz Woliński (https://sketchfab.com/jeandiz) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)-->
                 <a-asset id="blue-container-model" src="assets/models/blue-container.gltf"></a-asset>
+                <!--Cargo Ship Model by Javier_Fernandez on SketchFab  (https://sketchfab.com/3d-models/low-poly-cargo-ship-4c22cbaf01c1427f8ab60b3a07b1b32c) -->
                 <a-asset id="cargoShip-model" src="assets/models/low_poly_cargo_ship.glb"></a-asset>
             </a-assets>
 
+            <!--Game Manager-->
             <a-entity id="gameManager" game-manager></a-entity>
-
-            <!--Physics ground plane-->
-            <a-entity
-                id="physics-ground"
-                geometry="primitive: plane; width: 10; height: 10;"
-                position="0 0 0"
-                rotation="-90 0 0"
-                visible="false"
-            ></a-entity>
-
-            <a-entity
-                id="physics-table"
-                geometry="primitive: box; width: 0.75; height: 0.94; depth: 1.6;"
-                position="-0.78 0.25 0.32"
-                visible="false"
-            ></a-entity>
 
             <a-entity 
                 id="camera"
