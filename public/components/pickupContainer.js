@@ -18,7 +18,6 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
         //TRYING TO FIGURE OUT HOW TO CONSTRICT PICKUP TO ONLY IN VALID ZONES
         const CONTEXT = this;
         const craneController = document.querySelector('[crane-controller]').components['crane-controller']; //get the crane-controller component
-        const gameManager = document.querySelector('#gameManager').components['game-manager']; //get the game-manager component
         CONTEXT.data.containers = document.querySelectorAll('.shippingContainer');
         //add a list for the distances between the crane and the containers
         if (CONTEXT.data.containers.length > 0) {
@@ -78,7 +77,6 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
 
     //pickup a specific container (used for multiplayer)
     pickupSpecified: function (data) {
-        const CONTEXT = this;
         let container = document.querySelector('#' + data.containerID);
         let magnet = document.querySelector('#crane-magnet' + data.craneNum);
 
@@ -170,6 +168,7 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
         }
     },
 
+    //putdown a specific container (used for multiplayer)
     putdownSpecified: function (data) {
         let cargoShipID = data.cargoShipID;
         let cargoShip = document.querySelector('#' + cargoShipID);

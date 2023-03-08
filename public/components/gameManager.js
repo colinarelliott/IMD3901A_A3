@@ -15,6 +15,7 @@ AFRAME.registerComponent('game-manager', {
         p2Score: {type: 'number', default: 0},
         timer: {type: 'number', default: 0},
         timerStarted: {type: 'boolean', default: false},
+        doOnce: {type: 'boolean', default: true},
     },
     init: function () {
         console.log("gameManager component initialized");
@@ -203,6 +204,14 @@ AFRAME.registerComponent('game-manager', {
     tick: function () {
         const CONTEXT = this;
         const craneController = document.querySelector('[crane-controller]').components['crane-controller'];
+
+        //start the timer if timer is true (sync measure)
+        if (CONTEXT.doOnce === true) {
+            if (craneController.data.craneToControl && CONTEXT.data.timerStarted === true) {
+                CONTEXT.startTimer();
+                CONTEXT.doOnce = false;
+            }
+        }
 
         if (document.querySelector('#timerText') !== null) {
             document.querySelector('#timerText').setAttribute('text', 'value: Time: '+CONTEXT.data.timer+'s; align: center; color: #ffffff; width: 0.075; height: 0.0375; wrapCount: 25; zOffset: 0.01');
