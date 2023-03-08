@@ -45,6 +45,7 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
             //ACTUALLY PICKUP THE CONTAINER
             let container = document.querySelector('#' + containerID);
             let magnet = document.querySelector('#crane-magnet' + magnetNumber);
+
             //DEBUG
             console.log("Pickup executed: |" +magnetNumber+"|"+containerID+"|");
             let copy = container.cloneNode(true);
@@ -63,12 +64,7 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
                 copy.setAttribute('class', 'heldContainer'); //remove class so it doesn't get picked up again
             }, 10);
 
-             /*
-            craneController.pickupContainerEvent({
-                magnetNumber: magnetNumber,
-                containerToPickup: containerID //removed because call stack errors
-            }); */
-
+            //send the pickup event to the server
             craneController.socket.emit('pickupContainer', {
                 magnetNumber: magnetNumber,
                 containerToPickup: containerID
@@ -81,7 +77,6 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
 
     //pickup a specific container (used for multiplayer)
     pickupSpecified: function (data) {
-        const CONTEXT = this;
         let container = document.querySelector('#' + data.containerID);
         let magnet = document.querySelector('#crane-magnet' + data.craneNum);
 
@@ -166,13 +161,14 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
                 cargoShipID: cargoShipID,
             });
             setTimeout(function () {
-                cargoShipToTarget.components["container-holder"].addContainer();
+                cargoShipToTarget.components["container-holder"].addContainer(containerToPutdown);
                 containerToPutdown.parentNode.removeChild(containerToPutdown); //remove the container from the crane
                 console.log("container put down complete");
             }, 10); //10ms later to make sure it happens after the server is sent the event
         }
     },
 
+    //putdown a specific container (used for multiplayer)
     putdownSpecified: function (data) {
         let cargoShipID = data.cargoShipID;
         let cargoShip = document.querySelector('#' + cargoShipID);
@@ -182,7 +178,7 @@ AFRAME.registerComponent('pickupContainer', { //dependent on the crane-controlle
 
         //ADD container to the specific cargo ship
         if (container !== null) {
-            containerHolder.addContainer();
+            containerHolder.addContainer(container);
             container.parentNode.removeChild(container); //remove the container from the crane
         }
     },
