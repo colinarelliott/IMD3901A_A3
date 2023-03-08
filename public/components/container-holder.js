@@ -115,9 +115,7 @@ AFRAME.registerComponent('container-holder', { //this component is attached to t
         //remove one from the containerCount
         CONTEXT.data.containerCount--;
 
-        if (CONTEXT.data.containers.includes(container)) { //if the container is in the array
-            CONTEXT.data.containers.pop(); //remove the container from the array
-        }
+        CONTEXT.data.containers.pop(); //remove the container from the array
         
         CONTEXT.containerStateChange();
     },
