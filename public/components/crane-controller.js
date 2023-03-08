@@ -211,12 +211,12 @@ AFRAME.registerComponent('crane-controller', {
                     break;
                 case 65: //A
                     if (CONTEXT.data.rotation < -75) {
-                        CONTEXT.data.rotation += 2;
+                        CONTEXT.data.rotation += 4;
                     }
                     break;
                 case 37: //LEFT
                     if (CONTEXT.data.rotation < -75) {
-                        CONTEXT.data.rotation += 2;
+                        CONTEXT.data.rotation += 4;
                     }
                     break;
                 case 83: //S
@@ -231,12 +231,12 @@ AFRAME.registerComponent('crane-controller', {
                     break;
                 case 68: //D
                 if (CONTEXT.data.rotation > -210) {
-                    CONTEXT.data.rotation -= 2;
+                    CONTEXT.data.rotation -= 4;
                 }
                     break;
                 case 39: //RIGHT
                     if (CONTEXT.data.rotation > -210) {
-                        CONTEXT.data.rotation -= 2;
+                        CONTEXT.data.rotation -= 4;
                     }
                     break;
                 case 32: //SPACE
@@ -264,12 +264,12 @@ AFRAME.registerComponent('crane-controller', {
                     break;
                 case 65: //A
                     if (CONTEXT.data.rotation < 120) {
-                        CONTEXT.data.rotation += 2;
+                        CONTEXT.data.rotation += 4;
                     }
                     break;
                 case 37: //LEFT
                     if (CONTEXT.data.rotation < 120) {
-                        CONTEXT.data.rotation += 2;
+                        CONTEXT.data.rotation += 4;
                     }
                     break;
                 case 83: //S
@@ -284,12 +284,12 @@ AFRAME.registerComponent('crane-controller', {
                     break;
                 case 68: //D
                 if (CONTEXT.data.rotation > -30) {
-                    CONTEXT.data.rotation -= 2;
+                    CONTEXT.data.rotation -= 4;
                 }
                     break;
                 case 39: //RIGHT
                     if (CONTEXT.data.rotation > -30) {
-                        CONTEXT.data.rotation -= 2;
+                        CONTEXT.data.rotation -= 4;
                     }
                     break;
                 case 32: //SPACE
